@@ -15,8 +15,9 @@
   <description>A component to transparently retrieve resources from the filesystem, classpath or internet.</description>
 
   <scm>
-    <connection>scn:git:git@github.com:sonatype/plexus-resources.git</connection>
-    <developerConnection>scn:git:git@github.com:sonatype/plexus-resources.git</developerConnection>
+    <connection>scn:git:git@github.com:codehaus-plexus/plexus-resources.git</connection>
+    <developerConnection>scn:git:git@github.com:codehaus-plexus/plexus-resources.git</developerConnection>
+    <url>http://github.com/codehaus-plexus/plexus-resources</url>
   </scm>
 
   <dependencies>
