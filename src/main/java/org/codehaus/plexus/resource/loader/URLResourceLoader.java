@@ -26,6 +26,7 @@ package org.codehaus.plexus.resource.loader;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -59,8 +60,6 @@ public class URLResourceLoader
         {
             throw new ResourceNotFoundException( "URLResourceLoader : No template name provided" );
         }
-
-        Exception exception = null;
 
         for ( Iterator i = paths.iterator(); i.hasNext(); )
         {
@@ -99,6 +98,13 @@ public class URLResourceLoader
                     };
                 }
             }
+            catch( MalformedURLException mue )
+            {
+                if ( getLogger().isDebugEnabled() )
+                {
+                    getLogger().debug( "URLResourceLoader: No valid URL '" + path + name + '\'' );
+                }
+            }
             catch ( IOException ioe )
             {
                 if ( getLogger().isDebugEnabled() )
@@ -107,17 +113,10 @@ public class URLResourceLoader
                                        "URLResourceLoader: Exception when looking for '" + name + "' at '" + path + "'",
                                        ioe );
                 }
-
-                // only save the first one for later throwing
-                if ( exception == null )
-                {
-                    exception = ioe;
-                }
             }
         }
         
         // here we try to download without any path just the name which can be an url
-        
         try
         {
             URL u = new URL( name );
@@ -143,31 +142,22 @@ public class URLResourceLoader
                 };
             }
         }
+        catch( MalformedURLException mue )
+        {
+            if ( getLogger().isDebugEnabled() )
+            {
+                getLogger().debug( "URLResourceLoader: No valid URL '" + name + '\'' );
+            }
+        }
         catch ( IOException ioe )
         {
             if ( getLogger().isDebugEnabled() )
             {
-                getLogger().debug( "URLResourceLoader: Exception when looking for '" + name, ioe );
+                getLogger().debug( "URLResourceLoader: Exception when looking for '" + name + '\'', ioe );
             }
+       }
 
-            // only save the first one for later throwing
-            if ( exception == null )
-            {
-                exception = ioe;
-            }
-        }
-
-        // if we never found the template
-        String msg;
-        if ( exception == null )
-        {
-            msg = "URLResourceLoader : Resource '" + name + "' not found.";
-        }
-        else
-        {
-            msg = exception.getMessage();
-        }
         // convert to a general Velocity ResourceNotFoundException
-        throw new ResourceNotFoundException( msg );
+        throw new ResourceNotFoundException( name );
     }
 }
