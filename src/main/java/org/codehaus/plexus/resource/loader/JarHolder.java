@@ -121,11 +121,11 @@ public class JarHolder
 
     public Hashtable getEntries()
     {
-        Hashtable allEntries = new Hashtable( 559 );
+        Hashtable<String, String> allEntries = new Hashtable<String, String>( 559 );
 
         if ( theJar != null )
         {
-            Enumeration all = theJar.entries();
+            Enumeration<JarEntry> all = theJar.entries();
 
             while ( all.hasMoreElements() )
             {

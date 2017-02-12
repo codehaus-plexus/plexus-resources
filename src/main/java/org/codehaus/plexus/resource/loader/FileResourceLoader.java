@@ -26,8 +26,8 @@ package org.codehaus.plexus.resource.loader;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Iterator;
 
+import org.codehaus.plexus.component.annotations.Component;
 import org.codehaus.plexus.resource.PlexusResource;
 import org.codehaus.plexus.resource.loader.AbstractResourceLoader;
 import org.codehaus.plexus.resource.loader.ResourceNotFoundException;
@@ -37,8 +37,8 @@ import org.codehaus.plexus.util.FileUtils;
  * @author <a href="mailto:trygvis@inamo.no">Trygve Laugst&oslash;l</a>
  * @author Jason van Zyl
  * @version $Id$
- * @plexus.component role-hint="file" instantiation-strategy="per-lookup"
  */
+@Component( role = ResourceLoader.class, hint = "file", instantiationStrategy = "per-lookup" )
 public class FileResourceLoader
     extends AbstractResourceLoader
 {
@@ -51,10 +51,8 @@ public class FileResourceLoader
     public PlexusResource getResource( String name )
         throws ResourceNotFoundException
     {
-        for ( Iterator it = paths.iterator(); it.hasNext(); )
+        for ( String path : paths )
         {
-            String path = (String) it.next();
-
             final File file = new File( path, name );
 
             if ( file.canRead() )

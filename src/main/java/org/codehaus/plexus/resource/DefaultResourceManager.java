@@ -24,6 +24,9 @@ package org.codehaus.plexus.resource;
  * SOFTWARE.
  */
 
+import org.codehaus.plexus.component.annotations.Component;
+import org.codehaus.plexus.component.annotations.Requirement;
+
 import org.codehaus.plexus.logging.AbstractLogEnabled;
 import org.codehaus.plexus.resource.loader.FileResourceCreationException;
 import org.codehaus.plexus.resource.loader.ResourceIOException;
@@ -37,24 +40,21 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.Iterator;
 import java.util.Map;
 
 /**
  * @author <a href="mailto:trygvis@inamo.no">Trygve Laugst&oslash;l</a>
  * @author Jason van Zyl
  * @version $Id$
- * @plexus.component instantiation-strategy="per-lookup"
  */
+@Component( role = ResourceManager.class, instantiationStrategy = "per-lookup" )
 public class DefaultResourceManager
     extends AbstractLogEnabled
     implements ResourceManager
 {
+    @Requirement( role = ResourceLoader.class )
+    private Map<String, ResourceLoader> resourceLoaders;
 
-    /** @plexus.requirement role="org.codehaus.plexus.resource.loader.ResourceLoader" */
-    private Map resourceLoaders;
-
-    /** @plexus.configuration */
     private File outputDirectory;
 
     // ----------------------------------------------------------------------
@@ -150,10 +150,8 @@ public class DefaultResourceManager
     public PlexusResource getResource( String name )
         throws ResourceNotFoundException
     {
-        for ( Iterator i = resourceLoaders.values().iterator(); i.hasNext(); )
+        for ( ResourceLoader resourceLoader : resourceLoaders.values() )
         {
-            ResourceLoader resourceLoader = (ResourceLoader) i.next();
-
             try
             {
                 PlexusResource resource = resourceLoader.getResource( name );

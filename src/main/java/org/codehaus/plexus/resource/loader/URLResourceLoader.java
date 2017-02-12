@@ -29,22 +29,22 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
+import org.codehaus.plexus.component.annotations.Component;
 import org.codehaus.plexus.resource.PlexusResource;
 
 /**
  * @author Jason van Zyl
- * @plexus.component role-hint="url" instantiation-strategy="per-lookup"
  */
+@Component( role = ResourceLoader.class, hint = "url", instantiationStrategy = "per-lookup" )
 public class URLResourceLoader
     extends AbstractResourceLoader
 {
 
     public static final String ID = "url";
 
-    protected Map templateRoots = new HashMap();
+    protected Map<String, String> templateRoots = new HashMap<String, String>();
 
     /**
      * Get an InputStream so that the Runtime can build a template with it.
@@ -61,10 +61,8 @@ public class URLResourceLoader
             throw new ResourceNotFoundException( "URLResourceLoader : No template name provided" );
         }
 
-        for ( Iterator i = paths.iterator(); i.hasNext(); )
+        for ( String path : paths )
         {
-            String path = (String) i.next();
-
             try
             {
                 URL u = new URL( path + name );

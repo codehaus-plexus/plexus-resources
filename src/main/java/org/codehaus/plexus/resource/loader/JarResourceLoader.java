@@ -1,5 +1,7 @@
 package org.codehaus.plexus.resource.loader;
 
+import org.codehaus.plexus.component.annotations.Component;
+
 /*
  * The MIT License
  *
@@ -32,8 +34,8 @@ import java.util.Map;
 
 /**
  * @author Jason van Zyl
- * @plexus.component role-hint="jar" instantiation-strategy="per-lookup"
  */
+@Component( role = ResourceLoader.class, hint = "jar", instantiationStrategy = "per-lookup" )
 public class JarResourceLoader
     extends AbstractResourceLoader
 {
@@ -47,7 +49,7 @@ public class JarResourceLoader
     /**
      * Maps JAR URLs to the actual JAR (key = the JAR URL, value = the JAR).
      */
-    private Map jarfiles = new LinkedHashMap( 89 );
+    private Map<String, JarHolder> jarfiles = new LinkedHashMap<String, JarHolder>( 89 );
     
     private boolean initializeCalled;
 

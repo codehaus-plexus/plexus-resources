@@ -40,8 +40,7 @@ public abstract class AbstractResourceLoader
     extends AbstractLogEnabled
     implements ResourceLoader
 {
-    /** @configuration */
-    protected List paths = new ArrayList();
+    protected List<String> paths = new ArrayList<String>();
 
     public void addSearchPath( String path )
     {
