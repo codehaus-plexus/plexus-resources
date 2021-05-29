@@ -1,17 +1,20 @@
 package org.codehaus.plexus.resource.loader;
 
-import static org.mockito.Mockito.when;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
-import junit.framework.TestCase;
 
-import org.codehaus.plexus.logging.Logger;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.mockito.junit.MockitoJUnitRunner;
+import org.slf4j.Logger;
 
+
+@RunWith( MockitoJUnitRunner.class )
 public class URLResourceLoaderTest
-    extends TestCase
 {
     @Mock
     private Logger logger;
@@ -19,18 +22,9 @@ public class URLResourceLoaderTest
     @InjectMocks
     private ResourceLoader resourceLoader = new URLResourceLoader();
 
-    @Override
-    protected void setUp()
-        throws Exception
-    {
-        MockitoAnnotations.initMocks( this );
-    }
-
+    @Test
     public void testMalformedURL()
-        throws Exception
     {
-        when( logger.isDebugEnabled() ).thenReturn( true );
-
         try
         {
             resourceLoader.getResource( "LICENSE.txt" );
@@ -38,8 +32,7 @@ public class URLResourceLoaderTest
         }
         catch ( ResourceNotFoundException e )
         {
-            verify( logger ).isDebugEnabled();
-            verify( logger ).debug( "URLResourceLoader: No valid URL 'LICENSE.txt'" );
+            verify( logger ).debug( "URLResourceLoader: No valid URL '{}'", "LICENSE.txt" );
             verifyNoMoreInteractions( logger );
             assertEquals( "Could not find resource 'LICENSE.txt'.", e.getMessage() );
         }

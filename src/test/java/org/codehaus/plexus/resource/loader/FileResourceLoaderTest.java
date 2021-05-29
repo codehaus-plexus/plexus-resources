@@ -27,7 +27,6 @@ package org.codehaus.plexus.resource.loader;
 import java.io.File;
 
 import org.codehaus.plexus.resource.PlexusResource;
-import org.codehaus.plexus.resource.loader.AbstractResourceLoaderTest;
 
 /**
  * @author <a href="mailto:trygvis@inamo.no">Trygve Laugst&oslash;l</a>
