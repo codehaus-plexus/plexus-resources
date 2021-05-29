@@ -24,15 +24,17 @@ package org.codehaus.plexus.resource.loader;
  * SOFTWARE.
  */
 
+import org.codehaus.plexus.component.annotations.Component;
+import org.codehaus.plexus.resource.PlexusResource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
-
-import org.codehaus.plexus.component.annotations.Component;
-import org.codehaus.plexus.resource.PlexusResource;
 
 /**
  * @author Jason van Zyl
@@ -42,9 +44,11 @@ public class URLResourceLoader
     extends AbstractResourceLoader
 {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger( URLResourceLoader.class );
+
     public static final String ID = "url";
 
-    protected Map<String, String> templateRoots = new HashMap<String, String>();
+    protected Map<String, String> templateRoots = new HashMap<>();
 
     /**
      * Get an InputStream so that the Runtime can build a template with it.
@@ -71,10 +75,7 @@ public class URLResourceLoader
 
                 if ( inputStream != null )
                 {
-                    if ( getLogger().isDebugEnabled() )
-                    {
-                        getLogger().debug( "URLResourceLoader: Found '" + name + "' at '" + path + "'" );
-                    }
+                    LOGGER.debug( "URLResourceLoader: Found '{}' at '{}'", name, path );
 
                     // save this root for later re-use
                     templateRoots.put( name, path );
@@ -98,19 +99,11 @@ public class URLResourceLoader
             }
             catch( MalformedURLException mue )
             {
-                if ( getLogger().isDebugEnabled() )
-                {
-                    getLogger().debug( "URLResourceLoader: No valid URL '" + path + name + '\'' );
-                }
+                LOGGER.debug( "URLResourceLoader: No valid URL '{}{}'", path, name );
             }
             catch ( IOException ioe )
             {
-                if ( getLogger().isDebugEnabled() )
-                {
-                    getLogger().debug(
-                                       "URLResourceLoader: Exception when looking for '" + name + "' at '" + path + "'",
-                                       ioe );
-                }
+                LOGGER.debug( "URLResourceLoader: Exception when looking for '{}' at '{}'", name, path, ioe );
             }
         }
         
@@ -142,18 +135,12 @@ public class URLResourceLoader
         }
         catch( MalformedURLException mue )
         {
-            if ( getLogger().isDebugEnabled() )
-            {
-                getLogger().debug( "URLResourceLoader: No valid URL '" + name + '\'' );
-            }
+            LOGGER.debug( "URLResourceLoader: No valid URL '{}'", name );
         }
         catch ( IOException ioe )
         {
-            if ( getLogger().isDebugEnabled() )
-            {
-                getLogger().debug( "URLResourceLoader: Exception when looking for '" + name + '\'', ioe );
-            }
-       }
+            LOGGER.debug( "URLResourceLoader: Exception when looking for '{}'", name, ioe );
+        }
 
         // convert to a general Velocity ResourceNotFoundException
         throw new ResourceNotFoundException( name );

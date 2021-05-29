@@ -24,23 +24,20 @@ package org.codehaus.plexus.resource.loader;
  * SOFTWARE.
  */
 
-import org.codehaus.plexus.logging.AbstractLogEnabled;
 import org.codehaus.plexus.resource.PlexusResource;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author <a href="mailto:trygvis@inamo.no">Trygve Laugst&oslash;l</a>
  * @version $Id$
  */
-public abstract class AbstractResourceLoader
-    extends AbstractLogEnabled
-    implements ResourceLoader
+public abstract class AbstractResourceLoader implements ResourceLoader
 {
-    protected List<String> paths = new ArrayList<String>();
+    protected List<String> paths = new ArrayList<>();
 
     public void addSearchPath( String path )
     {

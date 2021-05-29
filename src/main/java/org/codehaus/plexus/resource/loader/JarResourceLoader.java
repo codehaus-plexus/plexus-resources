@@ -28,6 +28,8 @@ import org.codehaus.plexus.component.annotations.Component;
 
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 import org.codehaus.plexus.resource.PlexusResource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -39,6 +41,8 @@ import java.util.Map;
 public class JarResourceLoader
     extends AbstractResourceLoader
 {
+    private static final Logger LOGGER = LoggerFactory.getLogger( ResourceLoader.class );
+
     public static final String ID = "jar";
 
     /**
@@ -50,14 +54,14 @@ public class JarResourceLoader
      * Maps JAR URLs to the actual JAR (key = the JAR URL, value = the JAR).
      */
     private Map<String, JarHolder> jarfiles = new LinkedHashMap<String, JarHolder>( 89 );
-    
+
     private boolean initializeCalled;
 
     public void initialize()
         throws InitializationException
     {
         initializeCalled = true;
-        
+
         if ( paths != null )
         {
             for ( int i = 0; i < paths.size(); i++ )
@@ -69,21 +73,17 @@ public class JarResourceLoader
 
     private void loadJar( String path )
     {
-        if ( getLogger().isDebugEnabled() )
-        {
-            getLogger().debug( "JarResourceLoader : trying to load \"" + path + "\"" );
-        }
+        LOGGER.debug( "JarResourceLoader : trying to load '{}'", path );
 
         // Check path information
         if ( path == null )
         {
-            getLogger().error( "JarResourceLoader : can not load JAR - JAR path is null" );
+            LOGGER.error( "JarResourceLoader : can not load JAR - JAR path is null" );
             return;
         }
         if ( !path.startsWith( "jar:" ) )
         {
-            getLogger().error(
-                               "JarResourceLoader : JAR path must start with jar: -> "
+            LOGGER.error( "JarResourceLoader : JAR path must start with jar: -> "
                                    + "see java.net.JarURLConnection for information" );
             return;
         }
@@ -128,7 +128,7 @@ public class JarResourceLoader
 
     /**
      * Get an InputStream so that the Runtime can build a template with it.
-     * 
+     *
      * @param source name of template to get
      * @return InputStream containing the template
      * @throws ResourceNotFoundException if template not found in the file template path.
@@ -147,7 +147,7 @@ public class JarResourceLoader
                 throw new ResourceNotFoundException( e.getMessage(), e );
             }
         }
-        
+
         if ( source == null || source.length() == 0 )
         {
             throw new ResourceNotFoundException( "Need to have a resource!" );
