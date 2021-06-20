@@ -27,13 +27,14 @@ package org.codehaus.plexus.resource;
 import org.codehaus.plexus.component.annotations.Component;
 import org.codehaus.plexus.component.annotations.Requirement;
 
-import org.codehaus.plexus.logging.AbstractLogEnabled;
 import org.codehaus.plexus.resource.loader.FileResourceCreationException;
 import org.codehaus.plexus.resource.loader.ResourceIOException;
 import org.codehaus.plexus.resource.loader.ResourceLoader;
 import org.codehaus.plexus.resource.loader.ResourceNotFoundException;
 import org.codehaus.plexus.util.FileUtils;
 import org.codehaus.plexus.util.IOUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -48,10 +49,10 @@ import java.util.Map;
  * @version $Id$
  */
 @Component( role = ResourceManager.class, instantiationStrategy = "per-lookup" )
-public class DefaultResourceManager
-    extends AbstractLogEnabled
-    implements ResourceManager
+public class DefaultResourceManager implements ResourceManager
 {
+    private static final Logger LOGGER = LoggerFactory.getLogger( DefaultResourceManager.class );
+
     @Requirement( role = ResourceLoader.class )
     private Map<String, ResourceLoader> resourceLoaders;
 
@@ -156,15 +157,14 @@ public class DefaultResourceManager
             {
                 PlexusResource resource = resourceLoader.getResource( name );
 
-                getLogger().debug( "The resource " + "'" + name + "'" + " was found as " + resource.getName() + "." );
+                LOGGER.debug( "The resource " + "'{}' was found as {}.", name, resource.getName() );
 
                 return resource;
             }
             catch ( ResourceNotFoundException e )
             {
-                getLogger().debug(
-                                   "The resource " + "'" + name + "'" + " was not found with resourceLoader "
-                                       + resourceLoader.getClass().getName() + "." );
+                LOGGER.debug( "The resource '{}' was not found with resourceLoader {}.",
+                                       name, resourceLoader.getClass().getName() );
             }
         }
 
