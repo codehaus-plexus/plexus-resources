@@ -24,23 +24,21 @@ package org.codehaus.plexus.resource.loader;
  * SOFTWARE.
  */
 
+import org.codehaus.plexus.resource.PlexusResource;
+import org.codehaus.plexus.util.FileUtils;
+
 import java.io.File;
 import java.io.IOException;
-
-import org.codehaus.plexus.component.annotations.Component;
-import org.codehaus.plexus.resource.PlexusResource;
-import org.codehaus.plexus.resource.loader.AbstractResourceLoader;
-import org.codehaus.plexus.resource.loader.ResourceNotFoundException;
-import org.codehaus.plexus.util.FileUtils;
+import javax.inject.Named;
 
 /**
  * @author <a href="mailto:trygvis@inamo.no">Trygve Laugst&oslash;l</a>
  * @author Jason van Zyl
  * @version $Id$
  */
-@Component( role = ResourceLoader.class, hint = "file", instantiationStrategy = "per-lookup" )
+@Named( FileResourceLoader.ID )
 public class FileResourceLoader
-    extends AbstractResourceLoader
+        extends AbstractResourceLoader
 {
     public static final String ID = "file";
 
@@ -49,7 +47,7 @@ public class FileResourceLoader
     // ----------------------------------------------------------------------
 
     public PlexusResource getResource( String name )
-        throws ResourceNotFoundException
+            throws ResourceNotFoundException
     {
         for ( String path : paths )
         {
@@ -69,10 +67,10 @@ public class FileResourceLoader
     }
 
     /**
-     * @deprecated Use {@link org.codehaus.plexus.resource.ResourceManager#getResourceAsFile(PlexusResource )}.
+     * @deprecated Use {@link org.codehaus.plexus.resource.ResourceManager#getResourceAsFile(PlexusResource)}.
      */
     public static File getResourceAsFile( String name, String outputPath, File outputDirectory )
-        throws FileResourceCreationException
+            throws FileResourceCreationException
 
     {
         File f = new File( name );

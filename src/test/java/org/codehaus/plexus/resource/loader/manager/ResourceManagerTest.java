@@ -24,19 +24,27 @@ package org.codehaus.plexus.resource.loader.manager;
  * SOFTWARE.
  */
 
-import org.codehaus.plexus.PlexusTestCase;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
 import org.codehaus.plexus.resource.ResourceManager;
+import org.codehaus.plexus.testing.PlexusTest;
+import org.junit.jupiter.api.Test;
+
+import javax.inject.Inject;
 
 /**
  * @author <a href="mailto:trygvis@inamo.no">Trygve Laugst&oslash;l</a>
  * @version $Id$
  */
-public class ResourceManagerTest
-    extends PlexusTestCase
+@PlexusTest
+class ResourceManagerTest
 {
-    public void testFoo()
-        throws Exception
+    @Inject
+    private ResourceManager resourceManager;
+
+    @Test
+    void testFoo()
     {
-        lookup( ResourceManager.ROLE );
+        assertNotNull( resourceManager );
     }
 }
