@@ -24,28 +24,31 @@ package org.codehaus.plexus.resource.loader;
  * SOFTWARE.
  */
 
-import java.io.InputStream;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.fail;
 
-import org.codehaus.plexus.PlexusTestCase;
-import org.codehaus.plexus.resource.loader.ResourceLoader;
-import org.codehaus.plexus.resource.loader.ResourceNotFoundException;
 import org.codehaus.plexus.util.IOUtil;
+
+import java.io.InputStream;
+import javax.inject.Inject;
 
 /**
  * @author <a href="mailto:trygvis@inamo.no">Trygve Laugst&oslash;l</a>
  * @version $Id$
  */
 public abstract class AbstractResourceLoaderTest
-    extends PlexusTestCase
 {
+    @Inject
+    protected ResourceLoader resourceLoader;
+
     protected void assertResource( String name, String expectedContent )
-        throws Exception
+            throws Exception
     {
-        ResourceLoader resourceLoader = (ResourceLoader) lookup( ResourceLoader.ROLE );
 
         InputStream is = resourceLoader.getResource( name ).getInputStream();
 
-        assertNotNull( "The returned input stream is null, name: '" + name + "'.", is );
+        assertNotNull( is, "The returned input stream is null, name: '" + name + "'." );
 
         String actualContent = IOUtil.toString( is, "UTF-8" );
 
@@ -53,10 +56,8 @@ public abstract class AbstractResourceLoaderTest
     }
 
     protected void assertMissingResource( String name )
-        throws Exception
+            throws Exception
     {
-        ResourceLoader resourceLoader = (ResourceLoader) lookup( ResourceLoader.ROLE );
-
         try
         {
             InputStream is = resourceLoader.getResource( name ).getInputStream();
@@ -64,7 +65,7 @@ public abstract class AbstractResourceLoaderTest
             String content = IOUtil.toString( is, "UTF-8" );
 
             fail( "Expected ResourceNotFoundException while looking for a resource named '" + name + "'. Content:\n"
-                + content );
+                    + content );
         }
         catch ( ResourceNotFoundException e )
         {

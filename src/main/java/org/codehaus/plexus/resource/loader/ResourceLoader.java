@@ -34,8 +34,6 @@ import org.codehaus.plexus.resource.PlexusResource;
  */
 public interface ResourceLoader
 {
-    String ROLE = ResourceLoader.class.getName();
-
     /**
      * @deprecated Use {@link #getResource(String)}.
      */

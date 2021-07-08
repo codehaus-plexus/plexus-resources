@@ -24,26 +24,34 @@ package org.codehaus.plexus.resource;
  * SOFTWARE.
  */
 
+import static org.codehaus.plexus.testing.PlexusExtension.getBasedir;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import org.codehaus.plexus.testing.PlexusTest;
+import org.codehaus.plexus.util.FileUtils;
+import org.codehaus.plexus.util.IOUtil;
+import org.junit.jupiter.api.Test;
+
 import java.io.File;
 import java.io.InputStream;
-
-import org.codehaus.plexus.PlexusTestCase;
-import org.codehaus.plexus.util.IOUtil;
-import org.codehaus.plexus.util.FileUtils;
+import javax.inject.Inject;
 
 /**
  * @author <a href="mailto:trygvis@inamo.no">Trygve Laugst&oslash;l</a>
  * @version $Id$
  */
-public class ResourceManagerTest
-    extends PlexusTestCase
+@PlexusTest
+class ResourceManagerTest
 {
+    @Inject
+    private ResourceManager resourceManager;
 
-    public void testResourceManagerRetrievingInputStreams()
-        throws Exception
+    @Test
+    void testResourceManagerRetrievingInputStreams()
+            throws Exception
     {
-        ResourceManager resourceManager = (ResourceManager) lookup( ResourceManager.ROLE );
-
         InputStream in;
 
         File absoluteFile = new File( getBasedir(), "src/test/file-resources/dir/file.txt" ).getAbsoluteFile();
@@ -65,11 +73,10 @@ public class ResourceManagerTest
         assertEquals( "classpath.txt", IOUtil.toString( in, "UTF-8" ) );
     }
 
-    public void testResourceManagerRetrievingFiles()
-        throws Exception
+    @Test
+    void testResourceManagerRetrievingFiles()
+            throws Exception
     {
-        ResourceManager resourceManager = (ResourceManager) lookup( ResourceManager.ROLE );
-
         File f;
 
         File absoluteFile = new File( getBasedir(), "src/test/file-resources/dir/file.txt" ).getAbsoluteFile();
@@ -91,12 +98,11 @@ public class ResourceManagerTest
         assertEquals( "classpath.txt", FileUtils.fileRead( f, "UTF-8" ) );
     }
 
-    public void testResourceManagerRetrievingFilesToSpecificLocation()
-        throws Exception
+    @Test
+    void testResourceManagerRetrievingFilesToSpecificLocation()
+            throws Exception
     {
         File outDir = new File( getBasedir(), "target/test/unit/output-directory" );
-
-        ResourceManager resourceManager = (ResourceManager) lookup( ResourceManager.ROLE );
 
         resourceManager.setOutputDirectory( outDir );
 

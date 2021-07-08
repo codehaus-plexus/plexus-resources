@@ -24,7 +24,6 @@ package org.codehaus.plexus.resource.loader;
  * SOFTWARE.
  */
 
-import org.codehaus.plexus.component.annotations.Component;
 import org.codehaus.plexus.resource.PlexusResource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,13 +34,14 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
+import javax.inject.Named;
 
 /**
  * @author Jason van Zyl
  */
-@Component( role = ResourceLoader.class, hint = "url", instantiationStrategy = "per-lookup" )
+@Named( URLResourceLoader.ID )
 public class URLResourceLoader
-    extends AbstractResourceLoader
+        extends AbstractResourceLoader
 {
 
     private static final Logger LOGGER = LoggerFactory.getLogger( URLResourceLoader.class );
@@ -52,13 +52,13 @@ public class URLResourceLoader
 
     /**
      * Get an InputStream so that the Runtime can build a template with it.
-     * 
+     *
      * @param name name of template to fetch bytestream of
      * @return InputStream containing the template
      * @throws ResourceNotFoundException if template not found in the file template path.
      */
     public PlexusResource getResource( String name )
-        throws ResourceNotFoundException
+            throws ResourceNotFoundException
     {
         if ( name == null || name.length() == 0 )
         {
@@ -85,7 +85,7 @@ public class URLResourceLoader
                         private boolean useSuper;
 
                         public synchronized InputStream getInputStream()
-                            throws IOException
+                                throws IOException
                         {
                             if ( !useSuper )
                             {
@@ -97,7 +97,7 @@ public class URLResourceLoader
                     };
                 }
             }
-            catch( MalformedURLException mue )
+            catch ( MalformedURLException mue )
             {
                 LOGGER.debug( "URLResourceLoader: No valid URL '{}{}'", path, name );
             }
@@ -106,7 +106,7 @@ public class URLResourceLoader
                 LOGGER.debug( "URLResourceLoader: Exception when looking for '{}' at '{}'", name, path, ioe );
             }
         }
-        
+
         // here we try to download without any path just the name which can be an url
         try
         {
@@ -121,7 +121,7 @@ public class URLResourceLoader
                     private boolean useSuper;
 
                     public synchronized InputStream getInputStream()
-                        throws IOException
+                            throws IOException
                     {
                         if ( !useSuper )
                         {
@@ -133,7 +133,7 @@ public class URLResourceLoader
                 };
             }
         }
-        catch( MalformedURLException mue )
+        catch ( MalformedURLException mue )
         {
             LOGGER.debug( "URLResourceLoader: No valid URL '{}'", name );
         }

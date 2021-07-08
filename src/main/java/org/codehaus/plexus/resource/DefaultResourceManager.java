@@ -24,8 +24,6 @@ package org.codehaus.plexus.resource;
  * SOFTWARE.
  */
 
-import org.codehaus.plexus.component.annotations.Component;
-import org.codehaus.plexus.component.annotations.Requirement;
 
 import org.codehaus.plexus.resource.loader.FileResourceCreationException;
 import org.codehaus.plexus.resource.loader.ResourceIOException;
@@ -42,28 +40,35 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Map;
+import javax.inject.Inject;
+import javax.inject.Named;
 
 /**
  * @author <a href="mailto:trygvis@inamo.no">Trygve Laugst&oslash;l</a>
  * @author Jason van Zyl
  * @version $Id$
  */
-@Component( role = ResourceManager.class, instantiationStrategy = "per-lookup" )
+@Named
 public class DefaultResourceManager implements ResourceManager
 {
     private static final Logger LOGGER = LoggerFactory.getLogger( DefaultResourceManager.class );
 
-    @Requirement( role = ResourceLoader.class )
-    private Map<String, ResourceLoader> resourceLoaders;
+    private final Map<String, ResourceLoader> resourceLoaders;
 
     private File outputDirectory;
+
+    @Inject
+    private DefaultResourceManager( Map<String, ResourceLoader> resourceLoaders )
+    {
+        this.resourceLoaders = resourceLoaders;
+    }
 
     // ----------------------------------------------------------------------
     // ResourceManager Implementation
     // ----------------------------------------------------------------------
 
     public InputStream getResourceAsInputStream( String name )
-        throws ResourceNotFoundException
+            throws ResourceNotFoundException
     {
         PlexusResource resource = getResource( name );
         try
@@ -77,13 +82,13 @@ public class DefaultResourceManager implements ResourceManager
     }
 
     public File getResourceAsFile( String name )
-        throws ResourceNotFoundException, FileResourceCreationException
+            throws ResourceNotFoundException, FileResourceCreationException
     {
         return getResourceAsFile( getResource( name ) );
     }
 
     public File getResourceAsFile( String name, String outputPath )
-        throws ResourceNotFoundException, FileResourceCreationException
+            throws ResourceNotFoundException, FileResourceCreationException
     {
         if ( outputPath == null )
         {
@@ -104,7 +109,7 @@ public class DefaultResourceManager implements ResourceManager
     }
 
     public File resolveLocation( String name, String outputPath )
-        throws IOException
+            throws IOException
     {
         // Honour what the original locator does and return null ...
         try
@@ -118,7 +123,7 @@ public class DefaultResourceManager implements ResourceManager
     }
 
     public File resolveLocation( String name )
-        throws IOException
+            throws IOException
     {
         // Honour what the original locator does and return null ...
         try
@@ -149,7 +154,7 @@ public class DefaultResourceManager implements ResourceManager
     }
 
     public PlexusResource getResource( String name )
-        throws ResourceNotFoundException
+            throws ResourceNotFoundException
     {
         for ( ResourceLoader resourceLoader : resourceLoaders.values() )
         {
@@ -164,7 +169,7 @@ public class DefaultResourceManager implements ResourceManager
             catch ( ResourceNotFoundException e )
             {
                 LOGGER.debug( "The resource '{}' was not found with resourceLoader '{}'",
-                                       name, resourceLoader.getClass().getName() );
+                        name, resourceLoader.getClass().getName() );
             }
         }
 
@@ -172,7 +177,7 @@ public class DefaultResourceManager implements ResourceManager
     }
 
     public File getResourceAsFile( PlexusResource resource )
-        throws FileResourceCreationException
+            throws FileResourceCreationException
     {
         try
         {
@@ -194,7 +199,7 @@ public class DefaultResourceManager implements ResourceManager
     }
 
     public void createResourceAsFile( PlexusResource resource, File outputFile )
-        throws FileResourceCreationException
+            throws FileResourceCreationException
     {
         InputStream is = null;
         OutputStream os = null;

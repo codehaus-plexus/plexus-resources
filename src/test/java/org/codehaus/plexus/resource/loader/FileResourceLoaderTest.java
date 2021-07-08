@@ -24,41 +24,50 @@ package org.codehaus.plexus.resource.loader;
  * SOFTWARE.
  */
 
-import java.io.File;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.codehaus.plexus.resource.PlexusResource;
+import org.codehaus.plexus.testing.PlexusTest;
+import org.junit.jupiter.api.Test;
+
+import java.io.File;
 
 /**
  * @author <a href="mailto:trygvis@inamo.no">Trygve Laugst&oslash;l</a>
  * @version $Id$
  */
-public class FileResourceLoaderTest
-    extends AbstractResourceLoaderTest
+@PlexusTest
+class FileResourceLoaderTest
+        extends AbstractResourceLoaderTest
 {
-    public void testLookupWithAAbsolutePathName()
-        throws Exception
+    @Test
+    void testLookupWithAAbsolutePathName()
+            throws Exception
     {
         assertResource( "/dir/file.txt", "file.txt" );
     }
 
-    public void testLookupWithARelativePath()
-        throws Exception
+    @Test
+    void testLookupWithARelativePath()
+            throws Exception
     {
         assertResource( "dir/file.txt", "file.txt" );
     }
 
-    public void testLookupWhenTheResourceIsMissing()
-        throws Exception
+    @Test
+    void testLookupWhenTheResourceIsMissing()
+            throws Exception
     {
         assertMissingResource( "/foo.txt" );
 
         assertMissingResource( "foo.txt" );
     }
 
-    public void testPlexusResource()
-        throws Exception
+    @Test
+    void testPlexusResource()
+            throws Exception
     {
-        ResourceLoader resourceLoader = (ResourceLoader) lookup( ResourceLoader.ROLE );
         PlexusResource resource = resourceLoader.getResource( "/dir/file.txt" );
         final File f = new File( "src/test/file-resources", "/dir/file.txt" );
         assertEquals( f.getAbsolutePath(), resource.getFile().getPath() );

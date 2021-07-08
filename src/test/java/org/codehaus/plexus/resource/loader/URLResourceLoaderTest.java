@@ -1,20 +1,20 @@
 package org.codehaus.plexus.resource.loader;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.slf4j.Logger;
 
 
-@RunWith( MockitoJUnitRunner.class )
-public class URLResourceLoaderTest
+@ExtendWith( MockitoExtension.class )
+class URLResourceLoaderTest
 {
     @Mock
     private Logger logger;
@@ -23,7 +23,7 @@ public class URLResourceLoaderTest
     private ResourceLoader resourceLoader = new URLResourceLoader();
 
     @Test
-    public void testMalformedURL()
+    void testMalformedURL()
     {
         try
         {

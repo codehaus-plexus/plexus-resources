@@ -24,39 +24,50 @@ package org.codehaus.plexus.resource.loader;
  * SOFTWARE.
  */
 
-import java.net.URL;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import org.codehaus.plexus.resource.PlexusResource;
+import org.codehaus.plexus.testing.PlexusTest;
+import org.junit.jupiter.api.Test;
+
+import java.net.URL;
 
 /**
  * @author <a href="mailto:trygvis@inamo.no">Trygve Laugst&oslash;l</a>
  * @version $Id$
  */
-public class ThreadContextClasspathResourceLoaderTest
-    extends AbstractResourceLoaderTest
+@PlexusTest
+class ThreadContextClasspathResourceLoaderTest
+        extends AbstractResourceLoaderTest
 {
-    public void testLookupWithAAbsolutePathName()
-        throws Exception
+    @Test
+    void testLookupWithAAbsolutePathName()
+            throws Exception
     {
         assertResource( "/dir/classpath.txt", "classpath.txt" );
     }
 
-    public void testLookupWithARelativePath()
-        throws Exception
+    @Test
+    void testLookupWithARelativePath()
+            throws Exception
     {
         assertResource( "dir/classpath.txt", "classpath.txt" );
     }
 
-    public void testLookupWhenTheResourceIsMissing()
-        throws Exception
+    @Test
+    void testLookupWhenTheResourceIsMissing()
+            throws Exception
     {
         assertMissingResource( "/foo.txt" );
 
         assertMissingResource( "foo.txt" );
     }
 
-    public void testLookupWithANullThreadContextClassLoader()
-        throws Exception
+    @Test
+    void testLookupWithANullThreadContextClassLoader()
+            throws Exception
     {
         ClassLoader loader = Thread.currentThread().getContextClassLoader();
 
@@ -69,14 +80,15 @@ public class ThreadContextClasspathResourceLoaderTest
         Thread.currentThread().setContextClassLoader( loader );
     }
 
-    public void testPlexusResource()
-        throws Exception
+    @Test
+    void testPlexusResource()
+            throws Exception
     {
-        ResourceLoader resourceLoader = (ResourceLoader) lookup( ResourceLoader.ROLE );
         PlexusResource resource = resourceLoader.getResource( "/dir/classpath.txt" );
         assertNull( resource.getFile() );
         assertNull( resource.getURI() );
-        URL url = Thread.currentThread().getContextClassLoader().getResource( "/dir/classpath.txt" );
+        URL url = Thread.currentThread().getContextClassLoader().getResource( "dir/classpath.txt" );
+        assertNotNull( url );
         assertEquals( url, resource.getURL() );
         assertEquals( url.toExternalForm(), resource.getName() );
     }
