@@ -24,20 +24,20 @@ package org.codehaus.plexus.resource.loader;
  * SOFTWARE.
  */
 
-import java.net.URL;
-
-import org.codehaus.plexus.component.annotations.Component;
 import org.codehaus.plexus.resource.PlexusResource;
-import org.codehaus.plexus.resource.loader.AbstractResourceLoader;
-import org.codehaus.plexus.resource.loader.ResourceNotFoundException;
+
+import java.net.URL;
+import javax.inject.Named;
+import javax.inject.Singleton;
 
 /**
  * @author <a href="mailto:trygvis@inamo.no">Trygve Laugst&oslash;l</a>
  * @version $Id$
  */
-@Component( role = ResourceLoader.class, hint = "classloader" )
+@Named( ThreadContextClasspathResourceLoader.ID )
+@Singleton
 public class ThreadContextClasspathResourceLoader
-    extends AbstractResourceLoader
+        extends AbstractResourceLoader
 {
 
     public static final String ID = "classloader";
@@ -47,7 +47,7 @@ public class ThreadContextClasspathResourceLoader
     // ----------------------------------------------------------------------
 
     public PlexusResource getResource( String name )
-        throws ResourceNotFoundException
+            throws ResourceNotFoundException
     {
         ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
 

@@ -38,8 +38,6 @@ import org.codehaus.plexus.resource.loader.FileResourceCreationException;
  */
 public interface ResourceManager
 {
-    String ROLE = ResourceManager.class.getName();
-
     InputStream getResourceAsInputStream( String name )
         throws ResourceNotFoundException;
 

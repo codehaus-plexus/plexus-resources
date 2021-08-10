@@ -1,6 +1,5 @@
 package org.codehaus.plexus.resource.loader;
 
-import org.codehaus.plexus.component.annotations.Component;
 
 /*
  * The MIT License
@@ -26,22 +25,22 @@ import org.codehaus.plexus.component.annotations.Component;
  * SOFTWARE.
  */
 
-import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 import org.codehaus.plexus.resource.PlexusResource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
+import javax.inject.Named;
 
 /**
  * @author Jason van Zyl
  */
-@Component( role = ResourceLoader.class, hint = "jar", instantiationStrategy = "per-lookup" )
+@Named( JarResourceLoader.ID )
 public class JarResourceLoader
-    extends AbstractResourceLoader
+        extends AbstractResourceLoader
 {
-    private static final Logger LOGGER = LoggerFactory.getLogger( ResourceLoader.class );
+    private static final Logger LOGGER = LoggerFactory.getLogger( JarResourceLoader.class );
 
     public static final String ID = "jar";
 
@@ -58,7 +57,6 @@ public class JarResourceLoader
     private boolean initializeCalled;
 
     public void initialize()
-        throws InitializationException
     {
         initializeCalled = true;
 
@@ -66,7 +64,7 @@ public class JarResourceLoader
         {
             for ( int i = 0; i < paths.size(); i++ )
             {
-                loadJar( (String) paths.get( i ) );
+                loadJar( paths.get( i ) );
             }
         }
     }
@@ -84,7 +82,7 @@ public class JarResourceLoader
         if ( !path.startsWith( "jar:" ) )
         {
             LOGGER.error( "JarResourceLoader : JAR path must start with jar: -> "
-                                   + "see java.net.JarURLConnection for information" );
+                    + "see java.net.JarURLConnection for information" );
             return;
         }
         if ( !path.endsWith( "!/" ) )
@@ -134,18 +132,11 @@ public class JarResourceLoader
      * @throws ResourceNotFoundException if template not found in the file template path.
      */
     public PlexusResource getResource( String source )
-        throws ResourceNotFoundException
+            throws ResourceNotFoundException
     {
         if ( !initializeCalled )
         {
-            try
-            {
-                initialize();
-            }
-            catch ( InitializationException e )
-            {
-                throw new ResourceNotFoundException( e.getMessage(), e );
-            }
+            initialize();
         }
 
         if ( source == null || source.length() == 0 )
