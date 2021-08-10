@@ -43,7 +43,6 @@ import javax.inject.Named;
 public class URLResourceLoader
         extends AbstractResourceLoader
 {
-
     private static final Logger LOGGER = LoggerFactory.getLogger( URLResourceLoader.class );
 
     public static final String ID = "url";
@@ -57,6 +56,7 @@ public class URLResourceLoader
      * @return InputStream containing the template
      * @throws ResourceNotFoundException if template not found in the file template path.
      */
+    @Override
     public PlexusResource getResource( String name )
             throws ResourceNotFoundException
     {

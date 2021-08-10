@@ -47,12 +47,12 @@ public class JarResourceLoader
     /**
      * Maps entries to the parent JAR File (key = the entry *excluding* plain directories, value = the JAR URL).
      */
-    private Map entryDirectory = new LinkedHashMap( 559 );
+    private final Map<String, String> entryDirectory = new LinkedHashMap<>( 559 );
 
     /**
      * Maps JAR URLs to the actual JAR (key = the JAR URL, value = the JAR).
      */
-    private Map<String, JarHolder> jarfiles = new LinkedHashMap<String, JarHolder>( 89 );
+    private final Map<String, JarHolder> jarfiles = new LinkedHashMap<>( 89 );
 
     private boolean initializeCalled;
 
@@ -110,7 +110,7 @@ public class JarResourceLoader
     {
         if ( jarfiles.containsKey( path ) )
         {
-            JarHolder theJar = (JarHolder) jarfiles.get( path );
+            JarHolder theJar = jarfiles.get( path );
 
             theJar.close();
         }
@@ -119,7 +119,7 @@ public class JarResourceLoader
     /**
      * Copy all the entries into the entryDirectory. It will overwrite any duplicate keys.
      */
-    private void addEntries( Map entries )
+    private void addEntries( Map<String, String> entries )
     {
         entryDirectory.putAll( entries );
     }
@@ -131,6 +131,7 @@ public class JarResourceLoader
      * @return InputStream containing the template
      * @throws ResourceNotFoundException if template not found in the file template path.
      */
+    @Override
     public PlexusResource getResource( String source )
             throws ResourceNotFoundException
     {
@@ -154,9 +155,9 @@ public class JarResourceLoader
 
         if ( entryDirectory.containsKey( source ) )
         {
-            String jarurl = (String) entryDirectory.get( source );
+            String jarurl = entryDirectory.get( source );
 
-            final JarHolder holder = (JarHolder) jarfiles.get( jarurl );
+            final JarHolder holder = jarfiles.get( jarurl );
             if ( holder != null )
             {
                 return holder.getPlexusResource( source );
@@ -166,6 +167,7 @@ public class JarResourceLoader
         throw new ResourceNotFoundException( "JarResourceLoader Error: cannot find resource " + source );
     }
 
+    @Override
     public void addSearchPath( String path )
     {
         if ( !paths.contains( path ) )

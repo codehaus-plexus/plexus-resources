@@ -67,6 +67,7 @@ public class DefaultResourceManager implements ResourceManager
     // ResourceManager Implementation
     // ----------------------------------------------------------------------
 
+    @Override
     public InputStream getResourceAsInputStream( String name )
             throws ResourceNotFoundException
     {
@@ -81,12 +82,14 @@ public class DefaultResourceManager implements ResourceManager
         }
     }
 
+    @Override
     public File getResourceAsFile( String name )
             throws ResourceNotFoundException, FileResourceCreationException
     {
         return getResourceAsFile( getResource( name ) );
     }
 
+    @Override
     public File getResourceAsFile( String name, String outputPath )
             throws ResourceNotFoundException, FileResourceCreationException
     {
@@ -108,8 +111,8 @@ public class DefaultResourceManager implements ResourceManager
         return outputFile;
     }
 
+    @Override
     public File resolveLocation( String name, String outputPath )
-            throws IOException
     {
         // Honour what the original locator does and return null ...
         try
@@ -122,8 +125,8 @@ public class DefaultResourceManager implements ResourceManager
         }
     }
 
+    @Override
     public File resolveLocation( String name )
-            throws IOException
     {
         // Honour what the original locator does and return null ...
         try
@@ -136,14 +139,16 @@ public class DefaultResourceManager implements ResourceManager
         }
     }
 
+    @Override
     public void setOutputDirectory( File outputDirectory )
     {
         this.outputDirectory = outputDirectory;
     }
 
+    @Override
     public void addSearchPath( String id, String path )
     {
-        ResourceLoader loader = (ResourceLoader) resourceLoaders.get( id );
+        ResourceLoader loader = resourceLoaders.get( id );
 
         if ( loader == null )
         {
@@ -153,6 +158,7 @@ public class DefaultResourceManager implements ResourceManager
         loader.addSearchPath( path );
     }
 
+    @Override
     public PlexusResource getResource( String name )
             throws ResourceNotFoundException
     {
@@ -176,6 +182,7 @@ public class DefaultResourceManager implements ResourceManager
         throw new ResourceNotFoundException( name );
     }
 
+    @Override
     public File getResourceAsFile( PlexusResource resource )
             throws FileResourceCreationException
     {
@@ -198,6 +205,7 @@ public class DefaultResourceManager implements ResourceManager
         return outputFile;
     }
 
+    @Override
     public void createResourceAsFile( PlexusResource resource, File outputFile )
             throws FileResourceCreationException
     {

@@ -52,8 +52,7 @@ public interface PlexusResource
      * 
      * @return An {@link InputStream} with the resources contents, never null.
      */
-    public InputStream getInputStream()
-        throws IOException;
+    InputStream getInputStream() throws IOException;
 
     /**
      * <p>
@@ -63,8 +62,7 @@ public interface PlexusResource
      * 
      * @return A {@link File} containing the resources contents, if available, or null.
      */
-    public File getFile()
-        throws IOException;
+    File getFile() throws IOException;
 
     /**
      * <p>
@@ -73,8 +71,7 @@ public interface PlexusResource
      * 
      * @return The resources URL, if available, or null.
      */
-    public URL getURL()
-        throws IOException;
+    URL getURL() throws IOException;
 
     /**
      * <p>
@@ -83,13 +80,12 @@ public interface PlexusResource
      * 
      * @return The resources URI, if available, or null.
      */
-    public URI getURI()
-        throws IOException;
+    URI getURI() throws IOException;
 
     /**
      * Returns the resources name, if possible. A resources name is a relatively unspecified thing. For example, if the
      * resource has an {@link URL}, the name might be created by invoking {@link URL#toExternalForm()}. In the case of a
      * {@link File}, it might be {@link File#getPath()}.
      */
-    public String getName();
+    String getName();
 }

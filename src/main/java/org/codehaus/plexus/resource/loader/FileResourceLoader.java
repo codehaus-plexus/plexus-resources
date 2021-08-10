@@ -46,6 +46,7 @@ public class FileResourceLoader
     // ResourceLoader Implementation
     // ----------------------------------------------------------------------
 
+    @Override
     public PlexusResource getResource( String name )
             throws ResourceNotFoundException
     {

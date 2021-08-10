@@ -46,29 +46,32 @@ public class FilePlexusResource
         this.file = file;
     }
 
+    @Override
     public File getFile()
-        throws IOException
     {
         return file;
     }
 
+    @Override
     public InputStream getInputStream()
         throws IOException
     {
         return new FileInputStream( file );
     }
 
+    @Override
     public String getName()
     {
         return file.getPath();
     }
 
+    @Override
     public URI getURI()
-        throws IOException
     {
         return file.toURI();
     }
 
+    @Override
     public URL getURL()
         throws IOException
     {

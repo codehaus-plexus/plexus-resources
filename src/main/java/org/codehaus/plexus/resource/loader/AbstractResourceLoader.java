@@ -39,6 +39,7 @@ public abstract class AbstractResourceLoader implements ResourceLoader
 {
     protected List<String> paths = new ArrayList<>();
 
+    @Override
     public void addSearchPath( String path )
     {
         if ( !paths.contains( path ) )
@@ -47,6 +48,8 @@ public abstract class AbstractResourceLoader implements ResourceLoader
         }
     }
 
+    @Override
+    @Deprecated
     public InputStream getResourceAsInputStream( String name )
         throws ResourceNotFoundException
     {
