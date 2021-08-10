@@ -46,7 +46,7 @@ import org.codehaus.plexus.resource.PlexusResource;
  */
 public class JarHolder
 {
-    private String urlpath;
+    private final String urlpath;
 
     private JarFile theJar = null;
 

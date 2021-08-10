@@ -37,7 +37,7 @@ import java.util.List;
  */
 public abstract class AbstractResourceLoader implements ResourceLoader
 {
-    protected List<String> paths = new ArrayList<>();
+    protected final List<String> paths = new ArrayList<>();
 
     @Override
     public void addSearchPath( String path )

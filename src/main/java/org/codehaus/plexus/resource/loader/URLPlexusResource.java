@@ -47,7 +47,6 @@ public class URLPlexusResource
 
     @Override
     public File getFile()
-        throws IOException
     {
         return null;
     }
