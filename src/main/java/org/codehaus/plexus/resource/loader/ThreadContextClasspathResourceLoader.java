@@ -39,13 +39,13 @@ import javax.inject.Singleton;
 public class ThreadContextClasspathResourceLoader
         extends AbstractResourceLoader
 {
-
     public static final String ID = "classloader";
 
     // ----------------------------------------------------------------------
     // ResourceLoader Implementation
     // ----------------------------------------------------------------------
 
+    @Override
     public PlexusResource getResource( String name )
             throws ResourceNotFoundException
     {

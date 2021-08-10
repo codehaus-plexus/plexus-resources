@@ -46,7 +46,7 @@ import org.codehaus.plexus.resource.PlexusResource;
  */
 public class JarHolder
 {
-    private String urlpath = null;
+    private final String urlpath;
 
     private JarFile theJar = null;
 
@@ -56,11 +56,6 @@ public class JarHolder
     {
         this.urlpath = urlpath;
 
-        init();
-    }
-
-    public void init()
-    {
         try
         {
             URL url = new URL( urlpath );
@@ -119,9 +114,9 @@ public class JarHolder
         return data;
     }
 
-    public Hashtable getEntries()
+    public Hashtable<String, String> getEntries()
     {
-        Hashtable<String, String> allEntries = new Hashtable<String, String>( 559 );
+        Hashtable<String, String> allEntries = new Hashtable<>( 559 );
 
         if ( theJar != null )
         {
@@ -129,7 +124,7 @@ public class JarHolder
 
             while ( all.hasMoreElements() )
             {
-                JarEntry je = (JarEntry) all.nextElement();
+                JarEntry je = all.nextElement();
 
                 // We don't map plain directory entries
                 if ( !je.isDirectory() )
@@ -155,29 +150,32 @@ public class JarHolder
         }
         return new PlexusResource()
         {
+            @Override
             public File getFile()
-                throws IOException
             {
                 return null;
             }
 
+            @Override
             public InputStream getInputStream()
                 throws IOException
             {
                 return theJar.getInputStream( entry );
             }
 
+            @Override
             public String getName()
             {
                 return conn.getURL() + name;
             }
 
+            @Override
             public URI getURI()
-                throws IOException
             {
                 return null;
             }
 
+            @Override
             public URL getURL()
                 throws IOException
             {

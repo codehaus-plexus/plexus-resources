@@ -45,31 +45,33 @@ public class URLPlexusResource
         this.url = url;
     }
 
+    @Override
     public File getFile()
-        throws IOException
     {
         return null;
     }
 
+    @Override
     public InputStream getInputStream()
         throws IOException
     {
         return url.openStream();
     }
 
+    @Override
     public String getName()
     {
         return url.toExternalForm();
     }
 
+    @Override
     public URI getURI()
-        throws IOException
     {
         return null;
     }
 
+    @Override
     public URL getURL()
-        throws IOException
     {
         return url;
     }

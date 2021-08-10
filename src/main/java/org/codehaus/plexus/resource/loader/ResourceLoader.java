@@ -37,6 +37,7 @@ public interface ResourceLoader
     /**
      * @deprecated Use {@link #getResource(String)}.
      */
+    @Deprecated
     InputStream getResourceAsInputStream( String name )
         throws ResourceNotFoundException;
 

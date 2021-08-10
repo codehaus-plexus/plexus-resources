@@ -43,7 +43,6 @@ import javax.inject.Named;
 public class URLResourceLoader
         extends AbstractResourceLoader
 {
-
     private static final Logger LOGGER = LoggerFactory.getLogger( URLResourceLoader.class );
 
     public static final String ID = "url";
@@ -51,12 +50,13 @@ public class URLResourceLoader
     protected Map<String, String> templateRoots = new HashMap<>();
 
     /**
-     * Get an InputStream so that the Runtime can build a template with it.
+     * Get an {@link PlexusResource} with given name.
      *
-     * @param name name of template to fetch bytestream of
-     * @return InputStream containing the template
-     * @throws ResourceNotFoundException if template not found in the file template path.
+     * @param name name of resource to fetch byte stream of.
+     * @return PlexusResource containing the resource.
+     * @throws ResourceNotFoundException if resource not found.
      */
+    @Override
     public PlexusResource getResource( String name )
             throws ResourceNotFoundException
     {

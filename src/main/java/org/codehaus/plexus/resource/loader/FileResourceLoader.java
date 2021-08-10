@@ -46,6 +46,7 @@ public class FileResourceLoader
     // ResourceLoader Implementation
     // ----------------------------------------------------------------------
 
+    @Override
     public PlexusResource getResource( String name )
             throws ResourceNotFoundException
     {
@@ -69,6 +70,7 @@ public class FileResourceLoader
     /**
      * @deprecated Use {@link org.codehaus.plexus.resource.ResourceManager#getResourceAsFile(PlexusResource)}.
      */
+    @Deprecated
     public static File getResourceAsFile( String name, String outputPath, File outputDirectory )
             throws FileResourceCreationException
 

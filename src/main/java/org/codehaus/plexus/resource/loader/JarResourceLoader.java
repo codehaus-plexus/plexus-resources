@@ -31,6 +31,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
+
 import javax.inject.Named;
 
 /**
@@ -47,27 +48,12 @@ public class JarResourceLoader
     /**
      * Maps entries to the parent JAR File (key = the entry *excluding* plain directories, value = the JAR URL).
      */
-    private Map entryDirectory = new LinkedHashMap( 559 );
+    private final Map<String, String> entryDirectory = new LinkedHashMap<>( 559 );
 
     /**
      * Maps JAR URLs to the actual JAR (key = the JAR URL, value = the JAR).
      */
-    private Map<String, JarHolder> jarfiles = new LinkedHashMap<String, JarHolder>( 89 );
-
-    private boolean initializeCalled;
-
-    public void initialize()
-    {
-        initializeCalled = true;
-
-        if ( paths != null )
-        {
-            for ( int i = 0; i < paths.size(); i++ )
-            {
-                loadJar( paths.get( i ) );
-            }
-        }
-    }
+    private final Map<String, JarHolder> jarFiles = new LinkedHashMap<>( 89 );
 
     private void loadJar( String path )
     {
@@ -100,7 +86,7 @@ public class JarResourceLoader
         addEntries( temp.getEntries() );
 
         // Add it to the Jar table
-        jarfiles.put( temp.getUrlPath(), temp );
+        jarFiles.put( temp.getUrlPath(), temp );
     }
 
     /**
@@ -108,9 +94,9 @@ public class JarResourceLoader
      */
     private void closeJar( String path )
     {
-        if ( jarfiles.containsKey( path ) )
+        if ( jarFiles.containsKey( path ) )
         {
-            JarHolder theJar = (JarHolder) jarfiles.get( path );
+            JarHolder theJar = jarFiles.get( path );
 
             theJar.close();
         }
@@ -119,26 +105,22 @@ public class JarResourceLoader
     /**
      * Copy all the entries into the entryDirectory. It will overwrite any duplicate keys.
      */
-    private void addEntries( Map entries )
+    private void addEntries( Map<String, String> entries )
     {
         entryDirectory.putAll( entries );
     }
 
     /**
-     * Get an InputStream so that the Runtime can build a template with it.
+     * Get an {@link PlexusResource} by name.
      *
-     * @param source name of template to get
-     * @return InputStream containing the template
-     * @throws ResourceNotFoundException if template not found in the file template path.
+     * @param source name of resource to get
+     * @return PlexusResource containing the resource
+     * @throws ResourceNotFoundException if resource not found.
      */
+    @Override
     public PlexusResource getResource( String source )
             throws ResourceNotFoundException
     {
-        if ( !initializeCalled )
-        {
-            initialize();
-        }
-
         if ( source == null || source.length() == 0 )
         {
             throw new ResourceNotFoundException( "Need to have a resource!" );
@@ -154,9 +136,9 @@ public class JarResourceLoader
 
         if ( entryDirectory.containsKey( source ) )
         {
-            String jarurl = (String) entryDirectory.get( source );
+            String jarurl = entryDirectory.get( source );
 
-            final JarHolder holder = (JarHolder) jarfiles.get( jarurl );
+            final JarHolder holder = jarFiles.get( jarurl );
             if ( holder != null )
             {
                 return holder.getPlexusResource( source );
@@ -166,14 +148,12 @@ public class JarResourceLoader
         throw new ResourceNotFoundException( "JarResourceLoader Error: cannot find resource " + source );
     }
 
+    @Override
     public void addSearchPath( String path )
     {
         if ( !paths.contains( path ) )
         {
-            if ( initializeCalled )
-            {
-                loadJar( path );
-            }
+            loadJar( path );
             paths.add( path );
         }
     }
