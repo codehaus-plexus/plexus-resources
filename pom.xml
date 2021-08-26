@@ -33,7 +33,7 @@
 
   <properties>
     <project.build.outputTimestamp>2020-01-20T18:52:37Z</project.build.outputTimestamp>
-    <mockito.version>3.12.1</mockito.version>
+    <mockito.version>3.12.4</mockito.version>
   </properties>
 
   <dependencies>
