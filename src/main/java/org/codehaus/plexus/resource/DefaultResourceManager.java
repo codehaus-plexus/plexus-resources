@@ -58,7 +58,7 @@ public class DefaultResourceManager implements ResourceManager
     private File outputDirectory;
 
     @Inject
-    private DefaultResourceManager( Map<String, ResourceLoader> resourceLoaders )
+    public DefaultResourceManager( Map<String, ResourceLoader> resourceLoaders )
     {
         this.resourceLoaders = resourceLoaders;
     }
