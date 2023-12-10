@@ -36,45 +36,35 @@ import org.codehaus.plexus.resource.PlexusResource;
 /**
  * Implementation of {@link PlexusResource} for files.
  */
-public class FilePlexusResource
-    implements PlexusResource
-{
+public class FilePlexusResource implements PlexusResource {
     private final File file;
 
-    public FilePlexusResource( File file )
-    {
+    public FilePlexusResource(File file) {
         this.file = file;
     }
 
     @Override
-    public File getFile()
-    {
+    public File getFile() {
         return file;
     }
 
     @Override
-    public InputStream getInputStream()
-        throws IOException
-    {
-        return new FileInputStream( file );
+    public InputStream getInputStream() throws IOException {
+        return new FileInputStream(file);
     }
 
     @Override
-    public String getName()
-    {
+    public String getName() {
         return file.getPath();
     }
 
     @Override
-    public URI getURI()
-    {
+    public URI getURI() {
         return file.toURI();
     }
 
     @Override
-    public URL getURL()
-        throws IOException
-    {
+    public URL getURL() throws IOException {
         return file.toURI().toURL();
     }
 }

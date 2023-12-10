@@ -28,18 +28,14 @@ package org.codehaus.plexus.resource.loader;
  * @author <a href="mailto:trygvis@inamo.no">Trygve Laugst&oslash;l</a>
  * @version $Id$
  */
-public class ResourceNotFoundException
-    extends Exception
-{
+public class ResourceNotFoundException extends Exception {
     private static final long serialVersionUID = -566548849252110330L;
 
-    public ResourceNotFoundException( String name )
-    {
-        super( "Could not find resource '" + name + "'." );
+    public ResourceNotFoundException(String name) {
+        super("Could not find resource '" + name + "'.");
     }
 
-    public ResourceNotFoundException( String name, Throwable cause )
-    {
-        super( "Could not find resource '" + name + "'.", cause );
+    public ResourceNotFoundException(String name, Throwable cause) {
+        super("Could not find resource '" + name + "'.", cause);
     }
 }

@@ -24,51 +24,44 @@ package org.codehaus.plexus.resource.loader;
  * SOFTWARE.
  */
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.fail;
+import javax.inject.Inject;
+
+import java.io.InputStream;
 
 import org.codehaus.plexus.util.IOUtil;
 
-import java.io.InputStream;
-import javax.inject.Inject;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.fail;
 
 /**
  * @author <a href="mailto:trygvis@inamo.no">Trygve Laugst&oslash;l</a>
  * @version $Id$
  */
-public abstract class AbstractResourceLoaderTest
-{
+public abstract class AbstractResourceLoaderTest {
     @Inject
     protected ResourceLoader resourceLoader;
 
-    protected void assertResource( String name, String expectedContent )
-            throws Exception
-    {
+    protected void assertResource(String name, String expectedContent) throws Exception {
 
-        InputStream is = resourceLoader.getResource( name ).getInputStream();
+        InputStream is = resourceLoader.getResource(name).getInputStream();
 
-        assertNotNull( is, "The returned input stream is null, name: '" + name + "'." );
+        assertNotNull(is, "The returned input stream is null, name: '" + name + "'.");
 
-        String actualContent = IOUtil.toString( is, "UTF-8" );
+        String actualContent = IOUtil.toString(is, "UTF-8");
 
-        assertEquals( expectedContent, actualContent );
+        assertEquals(expectedContent, actualContent);
     }
 
-    protected void assertMissingResource( String name )
-            throws Exception
-    {
-        try
-        {
-            InputStream is = resourceLoader.getResource( name ).getInputStream();
+    protected void assertMissingResource(String name) throws Exception {
+        try {
+            InputStream is = resourceLoader.getResource(name).getInputStream();
 
-            String content = IOUtil.toString( is, "UTF-8" );
+            String content = IOUtil.toString(is, "UTF-8");
 
-            fail( "Expected ResourceNotFoundException while looking for a resource named '" + name + "'. Content:\n"
-                    + content );
-        }
-        catch ( ResourceNotFoundException e )
-        {
+            fail("Expected ResourceNotFoundException while looking for a resource named '" + name + "'. Content:\n"
+                    + content);
+        } catch (ResourceNotFoundException e) {
             // expected
         }
     }

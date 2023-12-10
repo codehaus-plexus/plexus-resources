@@ -24,72 +24,60 @@ package org.codehaus.plexus.resource.loader;
  * SOFTWARE.
  */
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import java.net.URL;
 
 import org.codehaus.plexus.resource.PlexusResource;
 import org.codehaus.plexus.testing.PlexusTest;
 import org.junit.jupiter.api.Test;
 
-import java.net.URL;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 /**
  * @author <a href="mailto:trygvis@inamo.no">Trygve Laugst&oslash;l</a>
  * @version $Id$
  */
 @PlexusTest
-class ThreadContextClasspathResourceLoaderTest
-        extends AbstractResourceLoaderTest
-{
+class ThreadContextClasspathResourceLoaderTest extends AbstractResourceLoaderTest {
     @Test
-    void testLookupWithAAbsolutePathName()
-            throws Exception
-    {
-        assertResource( "/dir/classpath.txt", "classpath.txt" );
+    void testLookupWithAAbsolutePathName() throws Exception {
+        assertResource("/dir/classpath.txt", "classpath.txt");
     }
 
     @Test
-    void testLookupWithARelativePath()
-            throws Exception
-    {
-        assertResource( "dir/classpath.txt", "classpath.txt" );
+    void testLookupWithARelativePath() throws Exception {
+        assertResource("dir/classpath.txt", "classpath.txt");
     }
 
     @Test
-    void testLookupWhenTheResourceIsMissing()
-            throws Exception
-    {
-        assertMissingResource( "/foo.txt" );
+    void testLookupWhenTheResourceIsMissing() throws Exception {
+        assertMissingResource("/foo.txt");
 
-        assertMissingResource( "foo.txt" );
+        assertMissingResource("foo.txt");
     }
 
     @Test
-    void testLookupWithANullThreadContextClassLoader()
-            throws Exception
-    {
+    void testLookupWithANullThreadContextClassLoader() throws Exception {
         ClassLoader loader = Thread.currentThread().getContextClassLoader();
 
-        Thread.currentThread().setContextClassLoader( null );
+        Thread.currentThread().setContextClassLoader(null);
 
-        assertMissingResource( "/dir/classpath.txt" );
+        assertMissingResource("/dir/classpath.txt");
 
-        assertMissingResource( "dir/classpath.txt" );
+        assertMissingResource("dir/classpath.txt");
 
-        Thread.currentThread().setContextClassLoader( loader );
+        Thread.currentThread().setContextClassLoader(loader);
     }
 
     @Test
-    void testPlexusResource()
-            throws Exception
-    {
-        PlexusResource resource = resourceLoader.getResource( "/dir/classpath.txt" );
-        assertNull( resource.getFile() );
-        assertNull( resource.getURI() );
-        URL url = Thread.currentThread().getContextClassLoader().getResource( "dir/classpath.txt" );
-        assertNotNull( url );
-        assertEquals( url, resource.getURL() );
-        assertEquals( url.toExternalForm(), resource.getName() );
+    void testPlexusResource() throws Exception {
+        PlexusResource resource = resourceLoader.getResource("/dir/classpath.txt");
+        assertNull(resource.getFile());
+        assertNull(resource.getURI());
+        URL url = Thread.currentThread().getContextClassLoader().getResource("dir/classpath.txt");
+        assertNotNull(url);
+        assertEquals(url, resource.getURL());
+        assertEquals(url.toExternalForm(), resource.getName());
     }
 }

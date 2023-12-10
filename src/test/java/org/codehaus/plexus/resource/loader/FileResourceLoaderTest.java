@@ -24,55 +24,44 @@ package org.codehaus.plexus.resource.loader;
  * SOFTWARE.
  */
 
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import java.io.File;
 
 import org.codehaus.plexus.resource.PlexusResource;
 import org.codehaus.plexus.testing.PlexusTest;
 import org.junit.jupiter.api.Test;
 
-import java.io.File;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * @author <a href="mailto:trygvis@inamo.no">Trygve Laugst&oslash;l</a>
  * @version $Id$
  */
 @PlexusTest
-class FileResourceLoaderTest
-        extends AbstractResourceLoaderTest
-{
+class FileResourceLoaderTest extends AbstractResourceLoaderTest {
     @Test
-    void testLookupWithAAbsolutePathName()
-            throws Exception
-    {
-        assertResource( "/dir/file.txt", "file.txt" );
+    void testLookupWithAAbsolutePathName() throws Exception {
+        assertResource("/dir/file.txt", "file.txt");
     }
 
     @Test
-    void testLookupWithARelativePath()
-            throws Exception
-    {
-        assertResource( "dir/file.txt", "file.txt" );
+    void testLookupWithARelativePath() throws Exception {
+        assertResource("dir/file.txt", "file.txt");
     }
 
     @Test
-    void testLookupWhenTheResourceIsMissing()
-            throws Exception
-    {
-        assertMissingResource( "/foo.txt" );
+    void testLookupWhenTheResourceIsMissing() throws Exception {
+        assertMissingResource("/foo.txt");
 
-        assertMissingResource( "foo.txt" );
+        assertMissingResource("foo.txt");
     }
 
     @Test
-    void testPlexusResource()
-            throws Exception
-    {
-        PlexusResource resource = resourceLoader.getResource( "/dir/file.txt" );
-        final File f = new File( "src/test/file-resources", "/dir/file.txt" );
-        assertEquals( f.getAbsolutePath(), resource.getFile().getPath() );
-        assertEquals( f.toURI(), resource.getURI() );
-        assertEquals( f.toURI().toURL(), resource.getURL() );
-        assertEquals( f.getAbsolutePath(), resource.getName() );
+    void testPlexusResource() throws Exception {
+        PlexusResource resource = resourceLoader.getResource("/dir/file.txt");
+        final File f = new File("src/test/file-resources", "/dir/file.txt");
+        assertEquals(f.getAbsolutePath(), resource.getFile().getPath());
+        assertEquals(f.toURI(), resource.getURI());
+        assertEquals(f.toURI().toURL(), resource.getURL());
+        assertEquals(f.getAbsolutePath(), resource.getName());
     }
 }

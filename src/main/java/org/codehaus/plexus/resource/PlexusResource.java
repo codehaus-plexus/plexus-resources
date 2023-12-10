@@ -33,11 +33,10 @@ import java.net.URL;
 /**
  * A resource is a byte stream, possibly (but not necessarily) with additional attributes like {@link File}, {@link URL}
  * , or {@link URI}.
- * 
+ *
  * @since 1.0-alpha-5
  */
-public interface PlexusResource
-{
+public interface PlexusResource {
     /**
      * <p>
      * Returns the resource as an {@link InputStream}. In general, you should not assume, that this method may me called
@@ -49,7 +48,7 @@ public interface PlexusResource
      * If you need a reliable way of reloading the resource more than once, then you should use
      * {@link ResourceManager#getResourceAsFile(PlexusResource)}.
      * </p>
-     * 
+     *
      * @return An {@link InputStream} with the resources contents, never null.
      */
     InputStream getInputStream() throws IOException;
@@ -59,7 +58,7 @@ public interface PlexusResource
      * Returns the resource as a file, if possible. A resource doesn't need to be available as a file: If you require a
      * file, use {@link ResourceManager#getResourceAsFile(PlexusResource)}.
      * </p>
-     * 
+     *
      * @return A {@link File} containing the resources contents, if available, or null.
      */
     File getFile() throws IOException;
@@ -68,7 +67,7 @@ public interface PlexusResource
      * <p>
      * Returns the resources URL, if possible. A resource doesn't need to have an URL.
      * </p>
-     * 
+     *
      * @return The resources URL, if available, or null.
      */
     URL getURL() throws IOException;
@@ -77,7 +76,7 @@ public interface PlexusResource
      * <p>
      * Returns the resources URI, if possible. A resource doesn't need to have an URI.
      * </p>
-     * 
+     *
      * @return The resources URI, if available, or null.
      */
     URI getURI() throws IOException;

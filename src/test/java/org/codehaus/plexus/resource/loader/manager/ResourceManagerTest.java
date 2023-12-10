@@ -24,27 +24,25 @@ package org.codehaus.plexus.resource.loader.manager;
  * SOFTWARE.
  */
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import javax.inject.Inject;
 
 import org.codehaus.plexus.resource.ResourceManager;
 import org.codehaus.plexus.testing.PlexusTest;
 import org.junit.jupiter.api.Test;
 
-import javax.inject.Inject;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 /**
  * @author <a href="mailto:trygvis@inamo.no">Trygve Laugst&oslash;l</a>
  * @version $Id$
  */
 @PlexusTest
-class ResourceManagerTest
-{
+class ResourceManagerTest {
     @Inject
     private ResourceManager resourceManager;
 
     @Test
-    void testFoo()
-    {
-        assertNotNull( resourceManager );
+    void testFoo() {
+        assertNotNull(resourceManager);
     }
 }

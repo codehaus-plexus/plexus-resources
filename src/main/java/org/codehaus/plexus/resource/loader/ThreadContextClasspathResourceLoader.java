@@ -24,21 +24,20 @@ package org.codehaus.plexus.resource.loader;
  * SOFTWARE.
  */
 
-import org.codehaus.plexus.resource.PlexusResource;
-
-import java.net.URL;
 import javax.inject.Named;
 import javax.inject.Singleton;
+
+import java.net.URL;
+
+import org.codehaus.plexus.resource.PlexusResource;
 
 /**
  * @author <a href="mailto:trygvis@inamo.no">Trygve Laugst&oslash;l</a>
  * @version $Id$
  */
-@Named( ThreadContextClasspathResourceLoader.ID )
+@Named(ThreadContextClasspathResourceLoader.ID)
 @Singleton
-public class ThreadContextClasspathResourceLoader
-        extends AbstractResourceLoader
-{
+public class ThreadContextClasspathResourceLoader extends AbstractResourceLoader {
     public static final String ID = "classloader";
 
     // ----------------------------------------------------------------------
@@ -46,27 +45,22 @@ public class ThreadContextClasspathResourceLoader
     // ----------------------------------------------------------------------
 
     @Override
-    public PlexusResource getResource( String name )
-            throws ResourceNotFoundException
-    {
+    public PlexusResource getResource(String name) throws ResourceNotFoundException {
         ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
 
-        if ( classLoader == null )
-        {
-            throw new ResourceNotFoundException( name );
+        if (classLoader == null) {
+            throw new ResourceNotFoundException(name);
         }
 
-        if ( name != null && name.startsWith( "/" ) )
-        {
-            name = name.substring( 1 );
+        if (name != null && name.startsWith("/")) {
+            name = name.substring(1);
         }
 
-        final URL url = classLoader.getResource( name );
-        if ( url == null )
-        {
-            throw new ResourceNotFoundException( name );
+        final URL url = classLoader.getResource(name);
+        if (url == null) {
+            throw new ResourceNotFoundException(name);
         }
 
-        return new URLPlexusResource( url );
+        return new URLPlexusResource(url);
     }
 }

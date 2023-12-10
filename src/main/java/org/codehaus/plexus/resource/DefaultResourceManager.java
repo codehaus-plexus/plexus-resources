@@ -24,6 +24,15 @@ package org.codehaus.plexus.resource;
  * SOFTWARE.
  */
 
+import javax.inject.Inject;
+import javax.inject.Named;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.Map;
 
 import org.codehaus.plexus.resource.loader.FileResourceCreationException;
 import org.codehaus.plexus.resource.loader.ResourceIOException;
@@ -34,32 +43,21 @@ import org.codehaus.plexus.util.IOUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.util.Map;
-import javax.inject.Inject;
-import javax.inject.Named;
-
 /**
  * @author <a href="mailto:trygvis@inamo.no">Trygve Laugst&oslash;l</a>
  * @author Jason van Zyl
  * @version $Id$
  */
 @Named
-public class DefaultResourceManager implements ResourceManager
-{
-    private static final Logger LOGGER = LoggerFactory.getLogger( DefaultResourceManager.class );
+public class DefaultResourceManager implements ResourceManager {
+    private static final Logger LOGGER = LoggerFactory.getLogger(DefaultResourceManager.class);
 
     private final Map<String, ResourceLoader> resourceLoaders;
 
     private File outputDirectory;
 
     @Inject
-    public DefaultResourceManager( Map<String, ResourceLoader> resourceLoaders )
-    {
+    public DefaultResourceManager(Map<String, ResourceLoader> resourceLoaders) {
         this.resourceLoaders = resourceLoaders;
     }
 
@@ -68,173 +66,131 @@ public class DefaultResourceManager implements ResourceManager
     // ----------------------------------------------------------------------
 
     @Override
-    public InputStream getResourceAsInputStream( String name )
-            throws ResourceNotFoundException
-    {
-        PlexusResource resource = getResource( name );
-        try
-        {
+    public InputStream getResourceAsInputStream(String name) throws ResourceNotFoundException {
+        PlexusResource resource = getResource(name);
+        try {
             return resource.getInputStream();
-        }
-        catch ( IOException e )
-        {
-            throw new ResourceIOException( "Failed to open resource " + resource.getName() + ": " + e.getMessage(), e );
+        } catch (IOException e) {
+            throw new ResourceIOException("Failed to open resource " + resource.getName() + ": " + e.getMessage(), e);
         }
     }
 
     @Override
-    public File getResourceAsFile( String name )
-            throws ResourceNotFoundException, FileResourceCreationException
-    {
-        return getResourceAsFile( getResource( name ) );
+    public File getResourceAsFile(String name) throws ResourceNotFoundException, FileResourceCreationException {
+        return getResourceAsFile(getResource(name));
     }
 
     @Override
-    public File getResourceAsFile( String name, String outputPath )
-            throws ResourceNotFoundException, FileResourceCreationException
-    {
-        if ( outputPath == null )
-        {
-            return getResourceAsFile( name );
+    public File getResourceAsFile(String name, String outputPath)
+            throws ResourceNotFoundException, FileResourceCreationException {
+        if (outputPath == null) {
+            return getResourceAsFile(name);
         }
-        PlexusResource resource = getResource( name );
+        PlexusResource resource = getResource(name);
         File outputFile;
-        if ( outputDirectory != null )
-        {
-            outputFile = new File( outputDirectory, outputPath );
+        if (outputDirectory != null) {
+            outputFile = new File(outputDirectory, outputPath);
+        } else {
+            outputFile = new File(outputPath);
         }
-        else
-        {
-            outputFile = new File( outputPath );
-        }
-        createResourceAsFile( resource, outputFile );
+        createResourceAsFile(resource, outputFile);
         return outputFile;
     }
 
     @Override
-    public File resolveLocation( String name, String outputPath )
-    {
+    public File resolveLocation(String name, String outputPath) {
         // Honour what the original locator does and return null ...
-        try
-        {
-            return getResourceAsFile( name, outputPath );
-        }
-        catch ( Exception e )
-        {
+        try {
+            return getResourceAsFile(name, outputPath);
+        } catch (Exception e) {
             return null;
         }
     }
 
     @Override
-    public File resolveLocation( String name )
-    {
+    public File resolveLocation(String name) {
         // Honour what the original locator does and return null ...
-        try
-        {
-            return getResourceAsFile( name );
-        }
-        catch ( Exception e )
-        {
+        try {
+            return getResourceAsFile(name);
+        } catch (Exception e) {
             return null;
         }
     }
 
     @Override
-    public void setOutputDirectory( File outputDirectory )
-    {
+    public void setOutputDirectory(File outputDirectory) {
         this.outputDirectory = outputDirectory;
     }
 
     @Override
-    public void addSearchPath( String id, String path )
-    {
-        ResourceLoader loader = resourceLoaders.get( id );
+    public void addSearchPath(String id, String path) {
+        ResourceLoader loader = resourceLoaders.get(id);
 
-        if ( loader == null )
-        {
-            throw new IllegalArgumentException( "unknown resource loader: " + id );
+        if (loader == null) {
+            throw new IllegalArgumentException("unknown resource loader: " + id);
         }
 
-        loader.addSearchPath( path );
+        loader.addSearchPath(path);
     }
 
     @Override
-    public PlexusResource getResource( String name )
-            throws ResourceNotFoundException
-    {
-        for ( ResourceLoader resourceLoader : resourceLoaders.values() )
-        {
-            try
-            {
-                PlexusResource resource = resourceLoader.getResource( name );
+    public PlexusResource getResource(String name) throws ResourceNotFoundException {
+        for (ResourceLoader resourceLoader : resourceLoaders.values()) {
+            try {
+                PlexusResource resource = resourceLoader.getResource(name);
 
-                LOGGER.debug( "The resource '{}' was found as '{}'", name, resource.getName() );
+                LOGGER.debug("The resource '{}' was found as '{}'", name, resource.getName());
 
                 return resource;
-            }
-            catch ( ResourceNotFoundException e )
-            {
-                LOGGER.debug( "The resource '{}' was not found with resourceLoader '{}'",
-                        name, resourceLoader.getClass().getName() );
+            } catch (ResourceNotFoundException e) {
+                LOGGER.debug(
+                        "The resource '{}' was not found with resourceLoader '{}'",
+                        name,
+                        resourceLoader.getClass().getName());
             }
         }
 
-        throw new ResourceNotFoundException( name );
+        throw new ResourceNotFoundException(name);
     }
 
     @Override
-    public File getResourceAsFile( PlexusResource resource )
-            throws FileResourceCreationException
-    {
-        try
-        {
+    public File getResourceAsFile(PlexusResource resource) throws FileResourceCreationException {
+        try {
             File f = resource.getFile();
-            if ( f != null )
-            {
+            if (f != null) {
                 return f;
             }
-        }
-        catch ( IOException e )
-        {
+        } catch (IOException e) {
             // Ignore this, try to make use of resource.getInputStream().
         }
 
-        final File outputFile = FileUtils.createTempFile( "plexus-resources", "tmp", outputDirectory );
+        final File outputFile = FileUtils.createTempFile("plexus-resources", "tmp", outputDirectory);
         outputFile.deleteOnExit();
-        createResourceAsFile( resource, outputFile );
+        createResourceAsFile(resource, outputFile);
         return outputFile;
     }
 
     @Override
-    public void createResourceAsFile( PlexusResource resource, File outputFile )
-            throws FileResourceCreationException
-    {
+    public void createResourceAsFile(PlexusResource resource, File outputFile) throws FileResourceCreationException {
         InputStream is = null;
         OutputStream os = null;
-        try
-        {
+        try {
             is = resource.getInputStream();
             File dir = outputFile.getParentFile();
-            if ( !dir.isDirectory() && !dir.mkdirs() )
-            {
-                throw new FileResourceCreationException( "Failed to create directory " + dir.getPath() );
+            if (!dir.isDirectory() && !dir.mkdirs()) {
+                throw new FileResourceCreationException("Failed to create directory " + dir.getPath());
             }
-            os = new FileOutputStream( outputFile );
-            IOUtil.copy( is, os );
+            os = new FileOutputStream(outputFile);
+            IOUtil.copy(is, os);
             is.close();
             is = null;
             os.close();
             os = null;
-        }
-        catch ( IOException e )
-        {
-            throw new FileResourceCreationException( "Cannot create file-based resource:" + e.getMessage(), e );
-        }
-        finally
-        {
-            IOUtil.close( is );
-            IOUtil.close( os );
+        } catch (IOException e) {
+            throw new FileResourceCreationException("Cannot create file-based resource:" + e.getMessage(), e);
+        } finally {
+            IOUtil.close(is);
+            IOUtil.close(os);
         }
     }
-
 }

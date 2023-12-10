@@ -39,52 +39,43 @@ import org.codehaus.plexus.resource.PlexusResource;
 
 /**
  * A small wrapper around a Jar
- * 
+ *
  * @author <a href="mailto:daveb@miceda-data.com">Dave Bryson</a>
  * @author Jason van Zyl
  * @version $Id$
  */
-public class JarHolder
-{
+public class JarHolder {
     private final String urlpath;
 
     private JarFile theJar = null;
 
     private JarURLConnection conn = null;
 
-    public JarHolder( String urlpath )
-    {
+    public JarHolder(String urlpath) {
         this.urlpath = urlpath;
 
-        try
-        {
-            URL url = new URL( urlpath );
+        try {
+            URL url = new URL(urlpath);
 
             conn = (JarURLConnection) url.openConnection();
 
-            conn.setAllowUserInteraction( false );
+            conn.setAllowUserInteraction(false);
 
-            conn.setDoInput( true );
+            conn.setDoInput(true);
 
-            conn.setDoOutput( false );
+            conn.setDoOutput(false);
 
             conn.connect();
 
             theJar = conn.getJarFile();
-        }
-        catch ( IOException ioe )
-        {
+        } catch (IOException ioe) {
         }
     }
 
-    public void close()
-    {
-        try
-        {
+    public void close() {
+        try {
             theJar.close();
-        }
-        catch ( Exception e )
-        {
+        } catch (Exception e) {
         }
 
         theJar = null;
@@ -92,94 +83,73 @@ public class JarHolder
         conn = null;
     }
 
-    public InputStream getResource( String theentry )
-        throws ResourceNotFoundException
-    {
+    public InputStream getResource(String theentry) throws ResourceNotFoundException {
         InputStream data = null;
 
-        try
-        {
-            JarEntry entry = theJar.getJarEntry( theentry );
+        try {
+            JarEntry entry = theJar.getJarEntry(theentry);
 
-            if ( entry != null )
-            {
-                data = theJar.getInputStream( entry );
+            if (entry != null) {
+                data = theJar.getInputStream(entry);
             }
-        }
-        catch ( Exception fnfe )
-        {
-            throw new ResourceNotFoundException( fnfe.getMessage() );
+        } catch (Exception fnfe) {
+            throw new ResourceNotFoundException(fnfe.getMessage());
         }
 
         return data;
     }
 
-    public Hashtable<String, String> getEntries()
-    {
-        Hashtable<String, String> allEntries = new Hashtable<>( 559 );
+    public Hashtable<String, String> getEntries() {
+        Hashtable<String, String> allEntries = new Hashtable<>(559);
 
-        if ( theJar != null )
-        {
+        if (theJar != null) {
             Enumeration<JarEntry> all = theJar.entries();
 
-            while ( all.hasMoreElements() )
-            {
+            while (all.hasMoreElements()) {
                 JarEntry je = all.nextElement();
 
                 // We don't map plain directory entries
-                if ( !je.isDirectory() )
-                {
-                    allEntries.put( je.getName(), this.urlpath );
+                if (!je.isDirectory()) {
+                    allEntries.put(je.getName(), this.urlpath);
                 }
             }
         }
         return allEntries;
     }
 
-    public String getUrlPath()
-    {
+    public String getUrlPath() {
         return urlpath;
     }
 
-    public PlexusResource getPlexusResource( final String name )
-    {
-        final JarEntry entry = theJar.getJarEntry( name );
-        if ( entry == null )
-        {
+    public PlexusResource getPlexusResource(final String name) {
+        final JarEntry entry = theJar.getJarEntry(name);
+        if (entry == null) {
             return null;
         }
-        return new PlexusResource()
-        {
+        return new PlexusResource() {
             @Override
-            public File getFile()
-            {
+            public File getFile() {
                 return null;
             }
 
             @Override
-            public InputStream getInputStream()
-                throws IOException
-            {
-                return theJar.getInputStream( entry );
+            public InputStream getInputStream() throws IOException {
+                return theJar.getInputStream(entry);
             }
 
             @Override
-            public String getName()
-            {
+            public String getName() {
                 return conn.getURL() + name;
             }
 
             @Override
-            public URI getURI()
-            {
+            public URI getURI() {
                 return null;
             }
 
             @Override
-            public URL getURL()
-                throws IOException
-            {
-                return new URL( conn.getJarFileURL(), name );
+            public URL getURL() throws IOException {
+                return new URL(conn.getJarFileURL(), name);
             }
         };
     }
