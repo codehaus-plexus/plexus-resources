@@ -24,101 +24,94 @@ package org.codehaus.plexus.resource;
  * SOFTWARE.
  */
 
-import static org.codehaus.plexus.testing.PlexusExtension.getBasedir;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import javax.inject.Inject;
+
+import java.io.File;
+import java.io.InputStream;
 
 import org.codehaus.plexus.testing.PlexusTest;
 import org.codehaus.plexus.util.FileUtils;
 import org.codehaus.plexus.util.IOUtil;
 import org.junit.jupiter.api.Test;
 
-import java.io.File;
-import java.io.InputStream;
-import javax.inject.Inject;
+import static org.codehaus.plexus.testing.PlexusExtension.getBasedir;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * @author <a href="mailto:trygvis@inamo.no">Trygve Laugst&oslash;l</a>
  * @version $Id$
  */
 @PlexusTest
-class ResourceManagerTest
-{
+class ResourceManagerTest {
     @Inject
     private ResourceManager resourceManager;
 
     @Test
-    void testResourceManagerRetrievingInputStreams()
-            throws Exception
-    {
+    void testResourceManagerRetrievingInputStreams() throws Exception {
         InputStream in;
 
-        File absoluteFile = new File( getBasedir(), "src/test/file-resources/dir/file.txt" ).getAbsoluteFile();
-        assertTrue( absoluteFile.isFile() );
-        assertTrue( absoluteFile.isAbsolute() );
-        in = resourceManager.getResourceAsInputStream( absoluteFile.getAbsolutePath() );
-        assertEquals( "file.txt", IOUtil.toString( in, "UTF-8" ) );
+        File absoluteFile = new File(getBasedir(), "src/test/file-resources/dir/file.txt").getAbsoluteFile();
+        assertTrue(absoluteFile.isFile());
+        assertTrue(absoluteFile.isAbsolute());
+        in = resourceManager.getResourceAsInputStream(absoluteFile.getAbsolutePath());
+        assertEquals("file.txt", IOUtil.toString(in, "UTF-8"));
 
-        in = resourceManager.getResourceAsInputStream( "/dir/file.txt" );
-        assertEquals( "file.txt", IOUtil.toString( in, "UTF-8" ) );
+        in = resourceManager.getResourceAsInputStream("/dir/file.txt");
+        assertEquals("file.txt", IOUtil.toString(in, "UTF-8"));
 
-        in = resourceManager.getResourceAsInputStream( "dir/file.txt" );
-        assertEquals( "file.txt", IOUtil.toString( in, "UTF-8" ) );
+        in = resourceManager.getResourceAsInputStream("dir/file.txt");
+        assertEquals("file.txt", IOUtil.toString(in, "UTF-8"));
 
-        in = resourceManager.getResourceAsInputStream( "/dir/classpath.txt" );
-        assertEquals( "classpath.txt", IOUtil.toString( in, "UTF-8" ) );
+        in = resourceManager.getResourceAsInputStream("/dir/classpath.txt");
+        assertEquals("classpath.txt", IOUtil.toString(in, "UTF-8"));
 
-        in = resourceManager.getResourceAsInputStream( "dir/classpath.txt" );
-        assertEquals( "classpath.txt", IOUtil.toString( in, "UTF-8" ) );
+        in = resourceManager.getResourceAsInputStream("dir/classpath.txt");
+        assertEquals("classpath.txt", IOUtil.toString(in, "UTF-8"));
     }
 
     @Test
-    void testResourceManagerRetrievingFiles()
-            throws Exception
-    {
+    void testResourceManagerRetrievingFiles() throws Exception {
         File f;
 
-        File absoluteFile = new File( getBasedir(), "src/test/file-resources/dir/file.txt" ).getAbsoluteFile();
-        assertTrue( absoluteFile.isFile() );
-        assertTrue( absoluteFile.isAbsolute() );
-        f = resourceManager.getResourceAsFile( absoluteFile.getAbsolutePath() );
-        assertEquals( "file.txt", FileUtils.fileRead( f, "UTF-8" ) );
+        File absoluteFile = new File(getBasedir(), "src/test/file-resources/dir/file.txt").getAbsoluteFile();
+        assertTrue(absoluteFile.isFile());
+        assertTrue(absoluteFile.isAbsolute());
+        f = resourceManager.getResourceAsFile(absoluteFile.getAbsolutePath());
+        assertEquals("file.txt", FileUtils.fileRead(f, "UTF-8"));
 
-        f = resourceManager.getResourceAsFile( "/dir/file.txt" );
-        assertEquals( "file.txt", FileUtils.fileRead( f, "UTF-8" ) );
+        f = resourceManager.getResourceAsFile("/dir/file.txt");
+        assertEquals("file.txt", FileUtils.fileRead(f, "UTF-8"));
 
-        f = resourceManager.getResourceAsFile( "dir/file.txt" );
-        assertEquals( "file.txt", FileUtils.fileRead( f, "UTF-8" ) );
+        f = resourceManager.getResourceAsFile("dir/file.txt");
+        assertEquals("file.txt", FileUtils.fileRead(f, "UTF-8"));
 
-        f = resourceManager.getResourceAsFile( "/dir/classpath.txt" );
-        assertEquals( "classpath.txt", FileUtils.fileRead( f, "UTF-8" ) );
+        f = resourceManager.getResourceAsFile("/dir/classpath.txt");
+        assertEquals("classpath.txt", FileUtils.fileRead(f, "UTF-8"));
 
-        f = resourceManager.getResourceAsFile( "dir/classpath.txt" );
-        assertEquals( "classpath.txt", FileUtils.fileRead( f, "UTF-8" ) );
+        f = resourceManager.getResourceAsFile("dir/classpath.txt");
+        assertEquals("classpath.txt", FileUtils.fileRead(f, "UTF-8"));
     }
 
     @Test
-    void testResourceManagerRetrievingFilesToSpecificLocation()
-            throws Exception
-    {
-        File outDir = new File( getBasedir(), "target/test/unit/output-directory" );
+    void testResourceManagerRetrievingFilesToSpecificLocation() throws Exception {
+        File outDir = new File(getBasedir(), "target/test/unit/output-directory");
 
-        resourceManager.setOutputDirectory( outDir );
+        resourceManager.setOutputDirectory(outDir);
 
-        File ef = new File( outDir, "test/f.txt" );
-        FileUtils.forceDelete( ef );
-        assertFalse( ef.exists() );
-        File f = resourceManager.getResourceAsFile( "dir/file.txt", "test/f.txt" );
-        assertEquals( "file.txt", FileUtils.fileRead( f, "UTF-8" ) );
-        assertEquals( ef, f );
+        File ef = new File(outDir, "test/f.txt");
+        FileUtils.forceDelete(ef);
+        assertFalse(ef.exists());
+        File f = resourceManager.getResourceAsFile("dir/file.txt", "test/f.txt");
+        assertEquals("file.txt", FileUtils.fileRead(f, "UTF-8"));
+        assertEquals(ef, f);
 
-        File ec = new File( outDir, "test/c.txt" );
-        FileUtils.forceDelete( ec );
-        assertFalse( ec.exists() );
-        File c = resourceManager.getResourceAsFile( "dir/classpath.txt", "test/c.txt" );
-        assertEquals( "classpath.txt", FileUtils.fileRead( c, "UTF-8" ) );
-        assertEquals( ec, c );
+        File ec = new File(outDir, "test/c.txt");
+        FileUtils.forceDelete(ec);
+        assertFalse(ec.exists());
+        File c = resourceManager.getResourceAsFile("dir/classpath.txt", "test/c.txt");
+        assertEquals("classpath.txt", FileUtils.fileRead(c, "UTF-8"));
+        assertEquals(ec, c);
     }
-
 }

@@ -24,43 +24,35 @@ package org.codehaus.plexus.resource.loader;
  * SOFTWARE.
  */
 
-import org.codehaus.plexus.resource.PlexusResource;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.codehaus.plexus.resource.PlexusResource;
+
 /**
  * @author <a href="mailto:trygvis@inamo.no">Trygve Laugst&oslash;l</a>
  * @version $Id$
  */
-public abstract class AbstractResourceLoader implements ResourceLoader
-{
+public abstract class AbstractResourceLoader implements ResourceLoader {
     protected final List<String> paths = new ArrayList<>();
 
     @Override
-    public void addSearchPath( String path )
-    {
-        if ( !paths.contains( path ) )
-        {
-            paths.add( path );
+    public void addSearchPath(String path) {
+        if (!paths.contains(path)) {
+            paths.add(path);
         }
     }
 
     @Override
     @Deprecated
-    public InputStream getResourceAsInputStream( String name )
-        throws ResourceNotFoundException
-    {
-        PlexusResource resource = getResource( name );
-        try
-        {
+    public InputStream getResourceAsInputStream(String name) throws ResourceNotFoundException {
+        PlexusResource resource = getResource(name);
+        try {
             return resource.getInputStream();
-        }
-        catch ( IOException e )
-        {
-            throw new ResourceIOException( "Failed to open resource " + resource.getName() + ": " + e.getMessage(), e );
+        } catch (IOException e) {
+            throw new ResourceIOException("Failed to open resource " + resource.getName() + ": " + e.getMessage(), e);
         }
     }
 }

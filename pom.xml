@@ -17,8 +17,8 @@
   <scm>
     <connection>scm:git:git@github.com:codehaus-plexus/plexus-resources.git</connection>
     <developerConnection>scm:git:git@github.com:codehaus-plexus/plexus-resources.git</developerConnection>
-    <url>http://github.com/codehaus-plexus/plexus-resources</url>
     <tag>plexus-resources-1.2.0</tag>
+    <url>http://github.com/codehaus-plexus/plexus-resources</url>
   </scm>
   <issueManagement>
     <system>jira</system>
@@ -98,15 +98,17 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-scm-publish-plugin</artifactId>
         <configuration>
-          <content>${project.reporting.outputDirectory}</content><!-- mono-module doesn't require site:stage -->
+          <content>${project.reporting.outputDirectory}</content>
+          <!-- mono-module doesn't require site:stage -->
         </configuration>
         <executions>
           <execution>
             <id>scm-publish</id>
-            <phase>site-deploy</phase><!-- deploy site with maven-scm-publish-plugin -->
+            <!-- deploy site with maven-scm-publish-plugin -->
             <goals>
               <goal>publish-scm</goal>
             </goals>
+            <phase>site-deploy</phase>
           </execution>
         </executions>
       </plugin>

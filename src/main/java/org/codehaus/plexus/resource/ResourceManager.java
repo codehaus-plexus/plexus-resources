@@ -24,72 +24,64 @@ package org.codehaus.plexus.resource;
  * SOFTWARE.
  */
 
-import java.io.InputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 
-import org.codehaus.plexus.resource.loader.ResourceNotFoundException;
 import org.codehaus.plexus.resource.loader.FileResourceCreationException;
+import org.codehaus.plexus.resource.loader.ResourceNotFoundException;
 
 /**
  * @author <a href="mailto:trygvis@inamo.no">Trygve Laugst&oslash;l</a>
  * @author Jason van Zyl
  * @version $Id$
  */
-public interface ResourceManager
-{
-    InputStream getResourceAsInputStream( String name )
-        throws ResourceNotFoundException;
+public interface ResourceManager {
+    InputStream getResourceAsInputStream(String name) throws ResourceNotFoundException;
 
-    File getResourceAsFile( String name )
-        throws ResourceNotFoundException, FileResourceCreationException;
+    File getResourceAsFile(String name) throws ResourceNotFoundException, FileResourceCreationException;
 
-    File getResourceAsFile( String name, String outputFile )
-        throws ResourceNotFoundException, FileResourceCreationException;
+    File getResourceAsFile(String name, String outputFile)
+            throws ResourceNotFoundException, FileResourceCreationException;
 
-    void setOutputDirectory( File outputDirectory );
+    void setOutputDirectory(File outputDirectory);
 
-    void addSearchPath( String resourceLoaderId, String searchPath );
+    void addSearchPath(String resourceLoaderId, String searchPath);
 
     /**
      * Provides compatibility with the Locator utility used by several Maven Plugins.
-     * 
+     *
      * @deprecated
      */
-    File resolveLocation( String location, String localfile )
-        throws IOException;
+    File resolveLocation(String location, String localfile) throws IOException;
 
     /**
      * Provides compatibility with the Locator utility used by several Maven Plugins.
-     * 
+     *
      * @deprecated
      */
-    File resolveLocation( String location )
-        throws IOException;
+    File resolveLocation(String location) throws IOException;
 
     /**
      * Searches for a resource with the given name.
-     * 
+     *
      * @since 1.0-alpha-5
      */
-    PlexusResource getResource( String name )
-        throws ResourceNotFoundException;
+    PlexusResource getResource(String name) throws ResourceNotFoundException;
 
     /**
      * Returns a file with the given resources contents. If the resource is already available as a file, returns that
      * file. Otherwise, a file in the resource managers output directory is created and the resource is downloaded to
      * that file.
-     * 
+     *
      * @since 1.0-alpha-5
      */
-    File getResourceAsFile( PlexusResource resource )
-        throws FileResourceCreationException;
+    File getResourceAsFile(PlexusResource resource) throws FileResourceCreationException;
 
     /**
      * Downloads the resource to the given output file.
-     * 
+     *
      * @since 1.0-alpha-5
      */
-    void createResourceAsFile( PlexusResource resource, File outputFile )
-        throws FileResourceCreationException;
+    void createResourceAsFile(PlexusResource resource, File outputFile) throws FileResourceCreationException;
 }

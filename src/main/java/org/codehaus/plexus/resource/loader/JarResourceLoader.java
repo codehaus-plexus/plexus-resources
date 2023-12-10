@@ -1,6 +1,5 @@
 package org.codehaus.plexus.resource.loader;
 
-
 /*
  * The MIT License
  *
@@ -25,78 +24,70 @@ package org.codehaus.plexus.resource.loader;
  * SOFTWARE.
  */
 
-import org.codehaus.plexus.resource.PlexusResource;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import javax.inject.Named;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import javax.inject.Named;
+import org.codehaus.plexus.resource.PlexusResource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author Jason van Zyl
  */
-@Named( JarResourceLoader.ID )
-public class JarResourceLoader
-        extends AbstractResourceLoader
-{
-    private static final Logger LOGGER = LoggerFactory.getLogger( JarResourceLoader.class );
+@Named(JarResourceLoader.ID)
+public class JarResourceLoader extends AbstractResourceLoader {
+    private static final Logger LOGGER = LoggerFactory.getLogger(JarResourceLoader.class);
 
     public static final String ID = "jar";
 
     /**
      * Maps entries to the parent JAR File (key = the entry *excluding* plain directories, value = the JAR URL).
      */
-    private final Map<String, String> entryDirectory = new LinkedHashMap<>( 559 );
+    private final Map<String, String> entryDirectory = new LinkedHashMap<>(559);
 
     /**
      * Maps JAR URLs to the actual JAR (key = the JAR URL, value = the JAR).
      */
-    private final Map<String, JarHolder> jarFiles = new LinkedHashMap<>( 89 );
+    private final Map<String, JarHolder> jarFiles = new LinkedHashMap<>(89);
 
-    private void loadJar( String path )
-    {
-        LOGGER.debug( "JarResourceLoader : trying to load '{}'", path );
+    private void loadJar(String path) {
+        LOGGER.debug("JarResourceLoader : trying to load '{}'", path);
 
         // Check path information
-        if ( path == null )
-        {
-            LOGGER.error( "JarResourceLoader : can not load JAR - JAR path is null" );
+        if (path == null) {
+            LOGGER.error("JarResourceLoader : can not load JAR - JAR path is null");
             return;
         }
-        if ( !path.startsWith( "jar:" ) )
-        {
-            LOGGER.error( "JarResourceLoader : JAR path must start with jar: -> "
-                    + "see java.net.JarURLConnection for information" );
+        if (!path.startsWith("jar:")) {
+            LOGGER.error("JarResourceLoader : JAR path must start with jar: -> "
+                    + "see java.net.JarURLConnection for information");
             return;
         }
-        if ( !path.endsWith( "!/" ) )
-        {
+        if (!path.endsWith("!/")) {
             path += "!/";
         }
 
         // Close the jar if it's already open this is useful for a reload
-        closeJar( path );
+        closeJar(path);
 
         // Create a new JarHolder
-        JarHolder temp = new JarHolder( path );
+        JarHolder temp = new JarHolder(path);
 
         // Add it's entries to the entryCollection
-        addEntries( temp.getEntries() );
+        addEntries(temp.getEntries());
 
         // Add it to the Jar table
-        jarFiles.put( temp.getUrlPath(), temp );
+        jarFiles.put(temp.getUrlPath(), temp);
     }
 
     /**
      * Closes a Jar file and set its URLConnection to null.
      */
-    private void closeJar( String path )
-    {
-        if ( jarFiles.containsKey( path ) )
-        {
-            JarHolder theJar = jarFiles.get( path );
+    private void closeJar(String path) {
+        if (jarFiles.containsKey(path)) {
+            JarHolder theJar = jarFiles.get(path);
 
             theJar.close();
         }
@@ -105,9 +96,8 @@ public class JarResourceLoader
     /**
      * Copy all the entries into the entryDirectory. It will overwrite any duplicate keys.
      */
-    private void addEntries( Map<String, String> entries )
-    {
-        entryDirectory.putAll( entries );
+    private void addEntries(Map<String, String> entries) {
+        entryDirectory.putAll(entries);
     }
 
     /**
@@ -118,43 +108,35 @@ public class JarResourceLoader
      * @throws ResourceNotFoundException if resource not found.
      */
     @Override
-    public PlexusResource getResource( String source )
-            throws ResourceNotFoundException
-    {
-        if ( source == null || source.length() == 0 )
-        {
-            throw new ResourceNotFoundException( "Need to have a resource!" );
+    public PlexusResource getResource(String source) throws ResourceNotFoundException {
+        if (source == null || source.length() == 0) {
+            throw new ResourceNotFoundException("Need to have a resource!");
         }
 
         /*
          * if a / leads off, then just nip that :)
          */
-        if ( source.startsWith( "/" ) )
-        {
-            source = source.substring( 1 );
+        if (source.startsWith("/")) {
+            source = source.substring(1);
         }
 
-        if ( entryDirectory.containsKey( source ) )
-        {
-            String jarurl = entryDirectory.get( source );
+        if (entryDirectory.containsKey(source)) {
+            String jarurl = entryDirectory.get(source);
 
-            final JarHolder holder = jarFiles.get( jarurl );
-            if ( holder != null )
-            {
-                return holder.getPlexusResource( source );
+            final JarHolder holder = jarFiles.get(jarurl);
+            if (holder != null) {
+                return holder.getPlexusResource(source);
             }
         }
 
-        throw new ResourceNotFoundException( "JarResourceLoader Error: cannot find resource " + source );
+        throw new ResourceNotFoundException("JarResourceLoader Error: cannot find resource " + source);
     }
 
     @Override
-    public void addSearchPath( String path )
-    {
-        if ( !paths.contains( path ) )
-        {
-            loadJar( path );
-            paths.add( path );
+    public void addSearchPath(String path) {
+        if (!paths.contains(path)) {
+            loadJar(path);
+            paths.add(path);
         }
     }
 }

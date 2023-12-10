@@ -24,9 +24,7 @@ package org.codehaus.plexus.resource.loader;
  * SOFTWARE.
  */
 
-import org.codehaus.plexus.resource.PlexusResource;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import javax.inject.Named;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -34,16 +32,17 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
-import javax.inject.Named;
+
+import org.codehaus.plexus.resource.PlexusResource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author Jason van Zyl
  */
-@Named( URLResourceLoader.ID )
-public class URLResourceLoader
-        extends AbstractResourceLoader
-{
-    private static final Logger LOGGER = LoggerFactory.getLogger( URLResourceLoader.class );
+@Named(URLResourceLoader.ID)
+public class URLResourceLoader extends AbstractResourceLoader {
+    private static final Logger LOGGER = LoggerFactory.getLogger(URLResourceLoader.class);
 
     public static final String ID = "url";
 
@@ -57,38 +56,28 @@ public class URLResourceLoader
      * @throws ResourceNotFoundException if resource not found.
      */
     @Override
-    public PlexusResource getResource( String name )
-            throws ResourceNotFoundException
-    {
-        if ( name == null || name.length() == 0 )
-        {
-            throw new ResourceNotFoundException( "URLResourceLoader : No template name provided" );
+    public PlexusResource getResource(String name) throws ResourceNotFoundException {
+        if (name == null || name.length() == 0) {
+            throw new ResourceNotFoundException("URLResourceLoader : No template name provided");
         }
 
-        for ( String path : paths )
-        {
-            try
-            {
-                URL u = new URL( path + name );
+        for (String path : paths) {
+            try {
+                URL u = new URL(path + name);
 
                 final InputStream inputStream = u.openStream();
 
-                if ( inputStream != null )
-                {
-                    LOGGER.debug( "URLResourceLoader: Found '{}' at '{}'", name, path );
+                if (inputStream != null) {
+                    LOGGER.debug("URLResourceLoader: Found '{}' at '{}'", name, path);
 
                     // save this root for later re-use
-                    templateRoots.put( name, path );
+                    templateRoots.put(name, path);
 
-                    return new URLPlexusResource( u )
-                    {
+                    return new URLPlexusResource(u) {
                         private boolean useSuper;
 
-                        public synchronized InputStream getInputStream()
-                                throws IOException
-                        {
-                            if ( !useSuper )
-                            {
+                        public synchronized InputStream getInputStream() throws IOException {
+                            if (!useSuper) {
                                 useSuper = true;
                                 return inputStream;
                             }
@@ -96,35 +85,25 @@ public class URLResourceLoader
                         }
                     };
                 }
-            }
-            catch ( MalformedURLException mue )
-            {
-                LOGGER.debug( "URLResourceLoader: No valid URL '{}{}'", path, name );
-            }
-            catch ( IOException ioe )
-            {
-                LOGGER.debug( "URLResourceLoader: Exception when looking for '{}' at '{}'", name, path, ioe );
+            } catch (MalformedURLException mue) {
+                LOGGER.debug("URLResourceLoader: No valid URL '{}{}'", path, name);
+            } catch (IOException ioe) {
+                LOGGER.debug("URLResourceLoader: Exception when looking for '{}' at '{}'", name, path, ioe);
             }
         }
 
         // here we try to download without any path just the name which can be an url
-        try
-        {
-            URL u = new URL( name );
+        try {
+            URL u = new URL(name);
 
             final InputStream inputStream = u.openStream();
 
-            if ( inputStream != null )
-            {
-                return new URLPlexusResource( u )
-                {
+            if (inputStream != null) {
+                return new URLPlexusResource(u) {
                     private boolean useSuper;
 
-                    public synchronized InputStream getInputStream()
-                            throws IOException
-                    {
-                        if ( !useSuper )
-                        {
+                    public synchronized InputStream getInputStream() throws IOException {
+                        if (!useSuper) {
                             useSuper = true;
                             return inputStream;
                         }
@@ -132,17 +111,13 @@ public class URLResourceLoader
                     }
                 };
             }
-        }
-        catch ( MalformedURLException mue )
-        {
-            LOGGER.debug( "URLResourceLoader: No valid URL '{}'", name );
-        }
-        catch ( IOException ioe )
-        {
-            LOGGER.debug( "URLResourceLoader: Exception when looking for '{}'", name, ioe );
+        } catch (MalformedURLException mue) {
+            LOGGER.debug("URLResourceLoader: No valid URL '{}'", name);
+        } catch (IOException ioe) {
+            LOGGER.debug("URLResourceLoader: Exception when looking for '{}'", name, ioe);
         }
 
         // convert to a general Velocity ResourceNotFoundException
-        throw new ResourceNotFoundException( name );
+        throw new ResourceNotFoundException(name);
     }
 }

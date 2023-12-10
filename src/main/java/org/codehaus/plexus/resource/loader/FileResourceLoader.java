@@ -24,22 +24,21 @@ package org.codehaus.plexus.resource.loader;
  * SOFTWARE.
  */
 
-import org.codehaus.plexus.resource.PlexusResource;
-import org.codehaus.plexus.util.FileUtils;
+import javax.inject.Named;
 
 import java.io.File;
 import java.io.IOException;
-import javax.inject.Named;
+
+import org.codehaus.plexus.resource.PlexusResource;
+import org.codehaus.plexus.util.FileUtils;
 
 /**
  * @author <a href="mailto:trygvis@inamo.no">Trygve Laugst&oslash;l</a>
  * @author Jason van Zyl
  * @version $Id$
  */
-@Named( FileResourceLoader.ID )
-public class FileResourceLoader
-        extends AbstractResourceLoader
-{
+@Named(FileResourceLoader.ID)
+public class FileResourceLoader extends AbstractResourceLoader {
     public static final String ID = "file";
 
     // ----------------------------------------------------------------------
@@ -47,69 +46,52 @@ public class FileResourceLoader
     // ----------------------------------------------------------------------
 
     @Override
-    public PlexusResource getResource( String name )
-            throws ResourceNotFoundException
-    {
-        for ( String path : paths )
-        {
-            final File file = new File( path, name );
+    public PlexusResource getResource(String name) throws ResourceNotFoundException {
+        for (String path : paths) {
+            final File file = new File(path, name);
 
-            if ( file.canRead() )
-            {
-                return new FilePlexusResource( file );
+            if (file.canRead()) {
+                return new FilePlexusResource(file);
             }
         }
-        File file = new File( name );
-        if ( file.isAbsolute() && file.canRead() )
-        {
-            return new FilePlexusResource( file );
+        File file = new File(name);
+        if (file.isAbsolute() && file.canRead()) {
+            return new FilePlexusResource(file);
         }
-        throw new ResourceNotFoundException( name );
+        throw new ResourceNotFoundException(name);
     }
 
     /**
      * @deprecated Use {@link org.codehaus.plexus.resource.ResourceManager#getResourceAsFile(PlexusResource)}.
      */
     @Deprecated
-    public static File getResourceAsFile( String name, String outputPath, File outputDirectory )
-            throws FileResourceCreationException
+    public static File getResourceAsFile(String name, String outputPath, File outputDirectory)
+            throws FileResourceCreationException {
 
-    {
-        File f = new File( name );
+        File f = new File(name);
 
-        if ( f.exists() )
-        {
-            if ( outputPath == null )
-            {
+        if (f.exists()) {
+            if (outputPath == null) {
                 return f;
-            }
-            else
-            {
-                try
-                {
+            } else {
+                try {
                     File outputFile;
 
-                    if ( outputDirectory != null )
-                    {
-                        outputFile = new File( outputDirectory, outputPath );
-                    }
-                    else
-                    {
-                        outputFile = new File( outputPath );
+                    if (outputDirectory != null) {
+                        outputFile = new File(outputDirectory, outputPath);
+                    } else {
+                        outputFile = new File(outputPath);
                     }
 
-                    if ( !outputFile.getParentFile().exists() )
-                    {
+                    if (!outputFile.getParentFile().exists()) {
                         outputFile.getParentFile().mkdirs();
                     }
 
-                    FileUtils.copyFile( f, outputFile );
+                    FileUtils.copyFile(f, outputFile);
 
                     return outputFile;
-                }
-                catch ( IOException e )
-                {
-                    throw new FileResourceCreationException( "Cannot create file-based resource.", e );
+                } catch (IOException e) {
+                    throw new FileResourceCreationException("Cannot create file-based resource.", e);
                 }
             }
         }
