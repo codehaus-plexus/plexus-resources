@@ -10,7 +10,7 @@
   </parent>
 
   <artifactId>plexus-resources</artifactId>
-  <version>1.2.1-SNAPSHOT</version>
+  <version>1.3.0</version>
 
   <name>Plexus Resource Component</name>
   <description>A component to transparently retrieve resources from the filesystem, classpath or internet.</description>
@@ -18,7 +18,7 @@
   <scm>
     <connection>scm:git:git@github.com:codehaus-plexus/plexus-resources.git</connection>
     <developerConnection>scm:git:git@github.com:codehaus-plexus/plexus-resources.git</developerConnection>
-    <tag>plexus-resources-1.2.0</tag>
+    <tag>plexus-resources-1.3.0</tag>
     <url>http://github.com/codehaus-plexus/plexus-resources</url>
   </scm>
   <issueManagement>
@@ -33,7 +33,7 @@
   </distributionManagement>
 
   <properties>
-    <project.build.outputTimestamp>2021-10-02T19:26:58Z</project.build.outputTimestamp>
+    <project.build.outputTimestamp>2023-12-23T22:05:19Z</project.build.outputTimestamp>
     <mockito.version>4.11.0</mockito.version>
   </properties>
 
