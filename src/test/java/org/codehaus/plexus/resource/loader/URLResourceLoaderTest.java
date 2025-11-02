@@ -21,7 +21,7 @@ class URLResourceLoaderTest {
     private ResourceLoader resourceLoader = new URLResourceLoader();
 
     @Test
-    void testMalformedURL() {
+    void malformedURL() {
         try {
             resourceLoader.getResource("LICENSE.txt");
             fail();
