@@ -39,24 +39,24 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @PlexusTest
 class FileResourceLoaderTest extends AbstractResourceLoaderTest {
     @Test
-    void testLookupWithAAbsolutePathName() throws Exception {
+    void lookupWithAAbsolutePathName() throws Exception {
         assertResource("/dir/file.txt", "file.txt");
     }
 
     @Test
-    void testLookupWithARelativePath() throws Exception {
+    void lookupWithARelativePath() throws Exception {
         assertResource("dir/file.txt", "file.txt");
     }
 
     @Test
-    void testLookupWhenTheResourceIsMissing() throws Exception {
+    void lookupWhenTheResourceIsMissing() throws Exception {
         assertMissingResource("/foo.txt");
 
         assertMissingResource("foo.txt");
     }
 
     @Test
-    void testPlexusResource() throws Exception {
+    void plexusResource() throws Exception {
         PlexusResource resource = resourceLoader.getResource("/dir/file.txt");
         final File f = new File("src/test/file-resources", "/dir/file.txt");
         assertEquals(f.getAbsolutePath(), resource.getFile().getPath());
