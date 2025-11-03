@@ -49,7 +49,7 @@ class ResourceManagerTest {
     private ResourceManager resourceManager;
 
     @Test
-    void testResourceManagerRetrievingInputStreams() throws Exception {
+    void resourceManagerRetrievingInputStreams() throws Exception {
         InputStream in;
 
         File absoluteFile = new File(getBasedir(), "src/test/file-resources/dir/file.txt").getAbsoluteFile();
@@ -72,7 +72,7 @@ class ResourceManagerTest {
     }
 
     @Test
-    void testResourceManagerRetrievingFiles() throws Exception {
+    void resourceManagerRetrievingFiles() throws Exception {
         File f;
 
         File absoluteFile = new File(getBasedir(), "src/test/file-resources/dir/file.txt").getAbsoluteFile();
@@ -95,7 +95,7 @@ class ResourceManagerTest {
     }
 
     @Test
-    void testResourceManagerRetrievingFilesToSpecificLocation() throws Exception {
+    void resourceManagerRetrievingFilesToSpecificLocation() throws Exception {
         File outDir = new File(getBasedir(), "target/test/unit/output-directory");
 
         resourceManager.setOutputDirectory(outDir);

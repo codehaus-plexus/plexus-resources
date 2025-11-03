@@ -42,7 +42,7 @@ class ResourceManagerTest {
     private ResourceManager resourceManager;
 
     @Test
-    void testFoo() {
+    void foo() {
         assertNotNull(resourceManager);
     }
 }

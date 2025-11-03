@@ -41,24 +41,24 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 @PlexusTest
 class ThreadContextClasspathResourceLoaderTest extends AbstractResourceLoaderTest {
     @Test
-    void testLookupWithAAbsolutePathName() throws Exception {
+    void lookupWithAAbsolutePathName() throws Exception {
         assertResource("/dir/classpath.txt", "classpath.txt");
     }
 
     @Test
-    void testLookupWithARelativePath() throws Exception {
+    void lookupWithARelativePath() throws Exception {
         assertResource("dir/classpath.txt", "classpath.txt");
     }
 
     @Test
-    void testLookupWhenTheResourceIsMissing() throws Exception {
+    void lookupWhenTheResourceIsMissing() throws Exception {
         assertMissingResource("/foo.txt");
 
         assertMissingResource("foo.txt");
     }
 
     @Test
-    void testLookupWithANullThreadContextClassLoader() throws Exception {
+    void lookupWithANullThreadContextClassLoader() throws Exception {
         ClassLoader loader = Thread.currentThread().getContextClassLoader();
 
         Thread.currentThread().setContextClassLoader(null);
@@ -71,7 +71,7 @@ class ThreadContextClasspathResourceLoaderTest extends AbstractResourceLoaderTes
     }
 
     @Test
-    void testPlexusResource() throws Exception {
+    void plexusResource() throws Exception {
         PlexusResource resource = resourceLoader.getResource("/dir/classpath.txt");
         assertNull(resource.getFile());
         assertNull(resource.getURI());
