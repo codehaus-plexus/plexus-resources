@@ -34,7 +34,7 @@
 
   <properties>
     <project.build.outputTimestamp>2025-08-25T21:30:49Z</project.build.outputTimestamp>
-    <mockito.version>4.11.0</mockito.version>
+    <mockito.version>5.0.0</mockito.version>
   </properties>
 
   <dependencyManagement>
