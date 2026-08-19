@@ -22,7 +22,6 @@ Maintained, quietly. The API is small and settled; expect dependency updates rat
 <dependency>
   <groupId>org.codehaus.plexus</groupId>
   <artifactId>plexus-resources</artifactId>
-  <version>1.3.1</version>
 </dependency>
 ```
 
@@ -37,6 +36,8 @@ resourceManager.addSearchPath( FileResourceLoader.ID, project.getFile().getParen
 InputStream in = resourceManager.getResourceAsInputStream( "checkstyle.xml" );
 File file = resourceManager.getResourceAsFile( "checkstyle.xml" );
 ```
+
+Check the badge above for the current version.
 
 `getResourceAsFile` will materialise a temporary file when the resource is not already one, so it works for
 classpath and URL resources too.
