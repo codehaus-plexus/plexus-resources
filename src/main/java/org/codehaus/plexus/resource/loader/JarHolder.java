@@ -30,8 +30,12 @@ import java.io.InputStream;
 import java.net.JarURLConnection;
 import java.net.URI;
 import java.net.URL;
+import java.net.URLConnection;
+import java.util.Collections;
 import java.util.Enumeration;
 import java.util.Hashtable;
+import java.util.LinkedHashSet;
+import java.util.Set;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
@@ -47,72 +51,63 @@ import org.codehaus.plexus.resource.PlexusResource;
 public class JarHolder {
     private final String urlpath;
 
-    private JarFile theJar = null;
-
-    private JarURLConnection conn = null;
+    private final Set<String> entries;
 
     public JarHolder(String urlpath) {
         this.urlpath = urlpath;
 
-        try {
-            URL url = new URL(urlpath);
-
-            conn = (JarURLConnection) url.openConnection();
-
-            conn.setAllowUserInteraction(false);
-
-            conn.setDoInput(true);
-
-            conn.setDoOutput(false);
-
-            conn.connect();
-
-            theJar = conn.getJarFile();
-        } catch (IOException ioe) {
-        }
-    }
-
-    public void close() {
-        try {
-            theJar.close();
-        } catch (Exception e) {
-        }
-
-        theJar = null;
-
-        conn = null;
-    }
-
-    public InputStream getResource(String theentry) throws ResourceNotFoundException {
-        InputStream data = null;
-
-        try {
-            JarEntry entry = theJar.getJarEntry(theentry);
-
-            if (entry != null) {
-                data = theJar.getInputStream(entry);
-            }
-        } catch (Exception fnfe) {
-            throw new ResourceNotFoundException(fnfe.getMessage());
-        }
-
-        return data;
-    }
-
-    public Hashtable<String, String> getEntries() {
-        Hashtable<String, String> allEntries = new Hashtable<>(559);
-
-        if (theJar != null) {
-            Enumeration<JarEntry> all = theJar.entries();
-
+        Set<String> names = Collections.emptySet();
+        // The jar is indexed once and every resource is read from a connection of its own, all without the
+        // JVM-wide jar: cache: a cached JarFile is never closed, so the jar stays locked on Windows and is read
+        // stale once it is rewritten (JDK-8239054).
+        try (JarFile jar = openJar(new URL(urlpath))) {
+            names = new LinkedHashSet<>();
+            Enumeration<JarEntry> all = jar.entries();
             while (all.hasMoreElements()) {
                 JarEntry je = all.nextElement();
 
                 // We don't map plain directory entries
                 if (!je.isDirectory()) {
-                    allEntries.put(je.getName(), this.urlpath);
+                    names.add(je.getName());
                 }
             }
+        } catch (IOException ioe) {
+        }
+        this.entries = names;
+    }
+
+    private static JarFile openJar(URL url) throws IOException {
+        JarURLConnection conn = (JarURLConnection) url.openConnection();
+        conn.setUseCaches(false);
+        return conn.getJarFile();
+    }
+
+    private InputStream openEntry(String name) throws IOException {
+        URLConnection conn = new URL(urlpath + name).openConnection();
+        conn.setUseCaches(false);
+        return conn.getInputStream();
+    }
+
+    /**
+     * Kept for compatibility: the jar is no longer held open, so there is nothing to close.
+     */
+    public void close() {}
+
+    public InputStream getResource(String theentry) throws ResourceNotFoundException {
+        if (!entries.contains(theentry)) {
+            return null;
+        }
+        try {
+            return openEntry(theentry);
+        } catch (Exception fnfe) {
+            throw new ResourceNotFoundException(fnfe.getMessage());
+        }
+    }
+
+    public Hashtable<String, String> getEntries() {
+        Hashtable<String, String> allEntries = new Hashtable<>(559);
+        for (String name : entries) {
+            allEntries.put(name, this.urlpath);
         }
         return allEntries;
     }
@@ -122,8 +117,7 @@ public class JarHolder {
     }
 
     public PlexusResource getPlexusResource(final String name) {
-        final JarEntry entry = theJar.getJarEntry(name);
-        if (entry == null) {
+        if (!entries.contains(name)) {
             return null;
         }
         return new PlexusResource() {
@@ -134,12 +128,12 @@ public class JarHolder {
 
             @Override
             public InputStream getInputStream() throws IOException {
-                return theJar.getInputStream(entry);
+                return openEntry(name);
             }
 
             @Override
             public String getName() {
-                return conn.getURL() + name;
+                return urlpath + name;
             }
 
             @Override
@@ -149,7 +143,7 @@ public class JarHolder {
 
             @Override
             public URL getURL() throws IOException {
-                return new URL(conn.getJarFileURL(), name);
+                return new URL(urlpath + name);
             }
         };
     }
