@@ -172,25 +172,16 @@ public class DefaultResourceManager implements ResourceManager {
 
     @Override
     public void createResourceAsFile(PlexusResource resource, File outputFile) throws FileResourceCreationException {
-        InputStream is = null;
-        OutputStream os = null;
-        try {
-            is = resource.getInputStream();
+        try (InputStream is = resource.getInputStream()) {
             File dir = outputFile.getParentFile();
             if (!dir.isDirectory() && !dir.mkdirs()) {
                 throw new FileResourceCreationException("Failed to create directory " + dir.getPath());
             }
-            os = new FileOutputStream(outputFile);
-            IOUtil.copy(is, os);
-            is.close();
-            is = null;
-            os.close();
-            os = null;
+            try (OutputStream os = new FileOutputStream(outputFile)) {
+                IOUtil.copy(is, os);
+            }
         } catch (IOException e) {
             throw new FileResourceCreationException("Cannot create file-based resource:" + e.getMessage(), e);
-        } finally {
-            IOUtil.close(is);
-            IOUtil.close(os);
         }
     }
 }
