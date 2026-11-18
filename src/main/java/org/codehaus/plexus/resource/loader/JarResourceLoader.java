@@ -69,9 +69,6 @@ public class JarResourceLoader extends AbstractResourceLoader {
             path += "!/";
         }
 
-        // Close the jar if it's already open this is useful for a reload
-        closeJar(path);
-
         // Create a new JarHolder
         JarHolder temp = new JarHolder(path);
 
@@ -80,17 +77,6 @@ public class JarResourceLoader extends AbstractResourceLoader {
 
         // Add it to the Jar table
         jarFiles.put(temp.getUrlPath(), temp);
-    }
-
-    /**
-     * Closes a Jar file and set its URLConnection to null.
-     */
-    private void closeJar(String path) {
-        if (jarFiles.containsKey(path)) {
-            JarHolder theJar = jarFiles.get(path);
-
-            theJar.close();
-        }
     }
 
     /**
@@ -109,7 +95,7 @@ public class JarResourceLoader extends AbstractResourceLoader {
      */
     @Override
     public PlexusResource getResource(String source) throws ResourceNotFoundException {
-        if (source == null || source.length() == 0) {
+        if (source == null || source.isEmpty()) {
             throw new ResourceNotFoundException("Need to have a resource!");
         }
 
