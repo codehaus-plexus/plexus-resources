@@ -57,7 +57,7 @@ public class URLResourceLoader extends AbstractResourceLoader {
      */
     @Override
     public PlexusResource getResource(String name) throws ResourceNotFoundException {
-        if (name == null || name.length() == 0) {
+        if (name == null || name.isEmpty()) {
             throw new ResourceNotFoundException("URLResourceLoader : No template name provided");
         }
 
