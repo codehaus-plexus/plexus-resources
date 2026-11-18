@@ -32,7 +32,7 @@ import org.codehaus.plexus.util.IOUtil;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
  * @author <a href="mailto:trygvis@inamo.no">Trygve Laugst&oslash;l</a>
@@ -54,15 +54,12 @@ public abstract class AbstractResourceLoaderTest {
     }
 
     protected void assertMissingResource(String name) throws Exception {
-        try {
-            InputStream is = resourceLoader.getResource(name).getInputStream();
-
-            String content = IOUtil.toString(is, "UTF-8");
-
-            fail("Expected ResourceNotFoundException while looking for a resource named '" + name + "'. Content:\n"
-                    + content);
-        } catch (ResourceNotFoundException e) {
-            // expected
-        }
+        assertThrows(
+                ResourceNotFoundException.class,
+                () -> {
+                    InputStream is = resourceLoader.getResource(name).getInputStream();
+                    IOUtil.toString(is, "UTF-8");
+                },
+                "Expected ResourceNotFoundException while looking for a resource named '" + name + "'.");
     }
 }
